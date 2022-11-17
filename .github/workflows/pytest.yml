@@ -1,0 +1,49 @@
+name: pytest
+on:
+  workflow_dispatch:
+
+# execute commands with conda aware shell by default:
+defaults:
+  run:
+    shell: bash -l {0}
+
+jobs:
+  main:
+    name: pytest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        py: ['3.8', '3.9', '3.10', '3.11']
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: '0' # Fetch all history for all tags and branches
+
+      - uses: CagtayFabry/pydeps2env@main
+        with:
+          file: 'pyproject.toml'
+          channels: 'conda-forge'
+          extras: 'test all'
+          setup_requires: 'include'
+          pip: 'datatable'
+
+      - uses: mamba-org/provision-with-micromamba@main
+        with:
+          environment-file: ./environment.yml
+          environment-name: pytcs
+          cache-env: true
+          extra-specs: |
+            python=${{ matrix.py }}
+
+      - name: activate env
+        run: micromamba activate pytcs
+
+      - name: pip installs
+        run: |
+          python -m pip install -e .
+
+      - name: run pytest
+        run: |
+          pytest

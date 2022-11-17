@@ -1,0 +1,46 @@
+options:
+  ScaleValues:
+    - "true"
+    - "false"
+  DecimalMark:
+    - "."
+    - ","
+  Seperator:
+    - 0  # Tab
+    - 1  # Blank (space)
+    - 2  # Colon
+    - 3  # Semicolon
+    - 4  # Comma
+  ArraySeperator:
+    - "Tab"
+  ExcludeDoubleTimestamp:
+    - "true"
+    - "false"
+  HeaderKonfiguration:
+    - "16777215"  # full header
+  SortChannels:
+    - "true"
+    - "false"
+  ContainEOF:
+    - "false"
+    - "true"
+  IncludeTriggerInfos:
+    - "false"
+    - "true"
+  FullTimeStamp:
+    - "false"
+    - "true"
+  IncludeMarkerTables:
+    - "None"
+  MarkerTableOnlyIncludedChannels:
+    - "false"
+    - "true"
+  MarkerTableOnlyIncludedMarker:
+    - "false"
+    - "true"
+  AdditionalEmptyLine:
+    - "false"
+    - "true"
+  AdditionalArraySeperator:
+    - "false"
+    - "true"
