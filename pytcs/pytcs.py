@@ -70,6 +70,7 @@ class ScopeChannel:
         import xarray as xr
 
         if not (lt := len(self.time)) == (lv := len(self.values)):
+            warn(f"Mismatch in time and value length for channel {self.name}", UserWarning)
             return xr.DataArray(
                 data=self.values[: min(lt, lv)],
                 dims=["time"],
@@ -108,6 +109,19 @@ class ScopeChannel:
                 f"time={len(self.time)}, values={len(values)}"
             )
         self._values = values
+
+    def __str__(self) -> str:
+        """Show simple text output."""
+        s = f"<TwinCAT Scope Channel at {hex(id(self))}> "
+        s += f'\nname:          {self.name}'
+        s += f'\nlength:        '
+        if self.values is None:
+            s += "(unloaded)"
+        else:
+            s += f"{len(self.values)}"
+        s += f"\nsample time:   {self.sample_time} ms"
+        s += f"\nunits:         {self.units}"
+        return s
 
 
 # https://github.com/florimondmanca/www/issues/102#issuecomment-733947821
@@ -180,6 +194,8 @@ class ScopeFile:
             Available backends are ``pandas`` (the default) and ``datatable``.
             Reading with pandas uses the ``engine=c``.
             For larger files, the ``datatable`` backend can be faster.
+            The ``datatable`` backend is considered experimental and has known bugs with
+            ``datatable<1.1.0`` for some CSV formats.
 
         """
         usecols = self._get_usecols(channels)
@@ -324,6 +340,18 @@ class ScopeFile:
             unloaded = "*" if v.values is None else ""
             s += f"\n  {unloaded}{v.name}: {v.sample_time} ms [{v.units}]"
         return s
+
+    def to_native_dtypes(self):
+        """Convert values to their native numpy dtypes.
+
+        The conversion is done inplace.
+        """
+        tc3_dtypes = get_tc3_dtypes()
+
+        for c in self:
+            self._data[self[c].value_col] = self._data[self[c].value_col].astype(
+                tc3_dtypes[self[c].info.get("Data-Type", "REAL64")][0])
+            self[c].values = self._data[self[c].value_col]
 
     def __getitem__(self, item):
         """Get item from list of channels."""
@@ -543,8 +571,6 @@ class ScopeFile:
             warn("'datatable' backend not found, using pandas.", UserWarning)
             return self._read_pandas(usecols)
 
-        import numpy as np
-
         columns = [
             i in usecols
             for i in range(len(self._get_cols()) + self._line_end_delimiter)
@@ -561,7 +587,7 @@ class ScopeFile:
             skip_blank_lines=True,
             na_strings=["EOF"],
         )
-        # self._df = df  # debug
+        self._df = df  # debug
 
         data_dict = {
             k: df[:, i].to_numpy(np.float64).squeeze() for i, k in enumerate(usecols)
