@@ -587,7 +587,7 @@ class ScopeFile:
             skip_blank_lines=True,
             na_strings=["EOF"],
         )
-        self._df = df  # debug
+        # self._df = df  # debug
 
         data_dict = {
             k: df[:, i].to_numpy(np.float64).squeeze() for i, k in enumerate(usecols)
