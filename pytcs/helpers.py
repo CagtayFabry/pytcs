@@ -32,22 +32,6 @@ def get_tc3_dtypes():
     return tc3_dtypes
 
 
-# # List of conversion from twincat to numpy dtypes
-# _tc3_dtypes = {
-#     "BIT": pd.UInt8Dtype(),
-#     "BIT8": pd.UInt8Dtype(),
-#     "INT8": pd.Int8Dtype(),
-#     "INT16": pd.Int16Dtype(),
-#     "INT32": pd.Int32Dtype(),
-#     "INT64": pd.Int64Dtype(),
-#     "UINT8": pd.UInt8Dtype(),
-#     "UINT16": pd.UInt16Dtype(),
-#     "UINT32": pd.UInt32Dtype(),
-#     "UINT64": pd.UInt64Dtype(),
-#     "REAL32": np.float32,
-#     "REAL64": np.float64,
-# }
-
 # list of channel metadata keys
 _channel_meta_keys = dict(
     SymbolComment="symbol_comment",

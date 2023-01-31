@@ -5,13 +5,13 @@ ci:
     for more information, see https://pre-commit.ci
   autofix_prs: false
   autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
-  autoupdate_schedule: weekly
+  autoupdate_schedule: monthly
   skip: []
   submodules: false
 repos:
   # ----- general formatting -----
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.1.0
+    rev: v4.4.0
     hooks:
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
@@ -27,14 +27,21 @@ repos:
           - mdformat-config
   # ----- Python formatting -----
   - repo: https://github.com/psf/black
-    rev: 22.6.0
+    rev: 22.12.0
     hooks:
       - id: black
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.10.1
-    hooks:
-      - id: isort
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.0.108
+    rev: v0.0.238
     hooks:
       - id: ruff
+        args:
+          - --quiet
+          - --fix
+  - repo: https://github.com/tox-dev/pyproject-fmt
+    rev: 0.6.0
+    hooks:
+      - id: pyproject-fmt
+  - repo: https://github.com/abravalheri/validate-pyproject
+    rev: v0.12.1
+    hooks:
+      - id: validate-pyproject
