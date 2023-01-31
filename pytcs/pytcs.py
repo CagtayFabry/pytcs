@@ -660,7 +660,7 @@ class ScopeFile:
         # catch wrong formatted SymbolComment
         if (key == "SymbolComment") and (values[-1][-1] == "SymbolComment"):
             values[-1] = values[-1][:-1]
-            values = values + [expected_fmt[-1]*[""]]
+            values = values + [expected_fmt[-1] * [""]]
 
         values = list(chain(*values))  # flatten
 
