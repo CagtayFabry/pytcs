@@ -60,6 +60,12 @@ class ScopeChannel:
 
         self.units = parse_unit_string(self.info.get("Unit"))
 
+    def as_dict(self) -> dict:
+        """Return a dict representation of the ScopeChannel."""
+        channel = self.__dict__.copy()
+        channel["values"] = channel.pop("_values")
+        return channel
+
     def as_pandas(self) -> pd.Series:
         """Channel as pandas series."""
         s = pd.Series(data=self.values, index=self.time, name=self.name)
@@ -222,6 +228,17 @@ class ScopeFile:
         self._update_time_links()
 
         self._update_data_refs()
+
+    def as_dict(self) -> dict:
+        """Convert scope file into regular Python dict."""
+        sf_dict = {
+            "name": self._meta["Name"],
+            "file": self._meta["File"],
+            "start_time": self.start_time,
+            "run_time": self.run_time,
+        }
+        sf_dict["channels"] = {k: v.as_dict() for k, v in self.items()}
+        return sf_dict
 
     def as_pandas(
         self,
