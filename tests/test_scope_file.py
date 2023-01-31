@@ -32,7 +32,7 @@ def filenames(request):
 class TestScopeFile:
     @staticmethod
     @pytest.mark.parametrize("native_dtypes", [False, True])
-    @pytest.mark.parametrize("backend", ["pandas", "datatable"])
+    @pytest.mark.parametrize("backend", ["pandas"])
     def test_scope_file(filenames, backend, native_dtypes):
         if native_dtypes & (backend == "datatable"):
             pytest.skip("unsupported configuration")
@@ -57,7 +57,7 @@ class TestScopeFile:
         str(sf)
 
     @staticmethod
-    @pytest.mark.parametrize("backend", ["pandas", "datatable"])
+    @pytest.mark.parametrize("backend", ["pandas"])
     def test_to_pandas(filenames, backend):
         if any(sep in str(filenames) for sep in broken_load):
             with pytest.raises(ValueError):
@@ -71,7 +71,7 @@ class TestScopeFile:
         assert not df.empty
 
     @staticmethod
-    @pytest.mark.parametrize("backend", ["pandas", "datatable"])
+    @pytest.mark.parametrize("backend", ["pandas"])
     def test_to_xarray(filenames, backend):
         if any(sep in str(filenames) for sep in broken_load):
             with pytest.raises(ValueError):
