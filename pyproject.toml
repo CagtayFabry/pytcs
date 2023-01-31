@@ -37,7 +37,6 @@ dependencies = [
 [project.optional-dependencies]
 all = [
   "bottleneck>=1.3",
-  "datatable",
   "pint>=0.18",
   "xarray>=0.15",
 ]

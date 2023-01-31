@@ -1,5 +1,7 @@
 name: pytest
 on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
 
 # execute commands with conda aware shell by default:
@@ -27,9 +29,8 @@ jobs:
           channels: 'conda-forge'
           extras: 'test all'
           setup_requires: 'include'
-          pip: 'datatable'
 
-      - uses: mamba-org/provision-with-micromamba@main
+      - uses: mamba-org/provision-with-micromamba@v15
         with:
           environment-file: ./environment.yml
           environment-name: pytcs
