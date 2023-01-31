@@ -486,6 +486,7 @@ class ScopeFile:
         channel_list = [
             sub[:-1].split(delimiter) for sub in name_line.split("Name" + delimiter)[1:]
         ]
+        expected_fmt = [len(channels) for channels in channel_list]
 
         channels = []
         time_index = 0
@@ -510,7 +511,7 @@ class ScopeFile:
             if line == "\n":
                 break
 
-            self._read_meta_line(line, delimiter)
+            self._read_meta_line(line, delimiter, expected_fmt)
             line = f.readline()
 
     def _build_time_mapping(self, line_0, line_1):
@@ -651,11 +652,18 @@ class ScopeFile:
             if v_col in self._data:
                 self._channels[c].values = self._data[v_col]
 
-    def _read_meta_line(self, line, delimiter):
+    def _read_meta_line(self, line, delimiter, expected_fmt):
         """Read a generic metadata line of the header and update channel metadata."""
         key = line.split(delimiter, maxsplit=1)[0]
         values = [sub[:-1].split(delimiter) for sub in line.split(key + delimiter)[1:]]
+
+        # catch wrong formatted SymbolComment
+        if (key == "SymbolComment") and (values[-1][-1] == "SymbolComment"):
+            values[-1] = values[-1][:-1]
+            values = values + [expected_fmt[-1]*[""]]
+
         values = list(chain(*values))  # flatten
+
         if not len(self._channels.keys()) == len(values):
             if key == "SymbolComment":
                 warn(
