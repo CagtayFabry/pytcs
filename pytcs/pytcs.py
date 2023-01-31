@@ -70,7 +70,10 @@ class ScopeChannel:
         import xarray as xr
 
         if not (lt := len(self.time)) == (lv := len(self.values)):
-            warn(f"Mismatch in time and value length for channel {self.name}", UserWarning)
+            warn(
+                f"Mismatch in time and value length for channel {self.name}",
+                UserWarning,
+            )
             return xr.DataArray(
                 data=self.values[: min(lt, lv)],
                 dims=["time"],
@@ -113,8 +116,8 @@ class ScopeChannel:
     def __str__(self) -> str:
         """Show simple text output."""
         s = f"<TwinCAT Scope Channel at {hex(id(self))}> "
-        s += f'\nname:          {self.name}'
-        s += f'\nlength:        '
+        s += f"\nname:          {self.name}"
+        s += "\nlength:        "
         if self.values is None:
             s += "(unloaded)"
         else:
@@ -350,7 +353,8 @@ class ScopeFile:
 
         for c in self:
             self._data[self[c].value_col] = self._data[self[c].value_col].astype(
-                tc3_dtypes[self[c].info.get("Data-Type", "REAL64")][0])
+                tc3_dtypes[self[c].info.get("Data-Type", "REAL64")][0]
+            )
             self[c].values = self._data[self[c].value_col]
 
     def __getitem__(self, item):
