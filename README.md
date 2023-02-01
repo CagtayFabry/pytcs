@@ -130,7 +130,7 @@ sf.as_xarray(channels=["var_REAL64", "var_UINT16"])
 # >     var_REAL64  (time) float64 0.0 1.0 2.0 3.0 4.0 ... 996.0 997.0 998.0 999.0
 # >     var_UINT16  (time) float64 0.0 1.0 2.0 3.0 4.0 ... 996.0 997.0 998.0 999.0
 # > Attributes:
-# >     Name:        tc3_scope_3_4_3145_3
+# >     ScopeName:   tc3_scope_3_4_3145_3
 # >     File:        C:\Python\weldx-dev\pytcs\tests\data\tc3_scope_3_4_3145_3-Co...
 # >     StartTime:   132959733843760000
 # >     EndTime:     132959733853750000

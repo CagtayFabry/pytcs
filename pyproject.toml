@@ -75,7 +75,9 @@ write_to = "pytcs/_version.py"
 
 [tool.pytest.ini_options]
 addopts = "--tb=short --color=yes -rsw --cov=pytcs --cov-report=term-missing:skip-covered --doctest-modules"
-testpaths = "tests"
+testpaths = [
+    "tests",
+]
 # norecursedirs = "doc"
 
 [tool.black]
