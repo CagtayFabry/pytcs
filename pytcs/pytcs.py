@@ -13,7 +13,7 @@ from warnings import warn
 import numpy as np
 import pandas as pd
 
-from .helpers import (
+from pytcs.helpers import (
     filetime_to_dt,
     get_tc3_dtypes,
     parse_unit_string,
@@ -232,7 +232,7 @@ class ScopeFile:
     def as_dict(self) -> dict:
         """Convert scope file into regular Python dict."""
         sf_dict = {
-            "name": self._meta["Name"],
+            "scope_name": self._meta["ScopeName"],
             "file": self._meta["File"],
             "start_time": self.start_time,
             "run_time": self.run_time,
@@ -351,9 +351,9 @@ class ScopeFile:
     def __repr__(self):
         """Show simple text output."""
         s = f"<TwinCAT Scope File at {hex(id(self))}> "
-        s += f'\nname:    {self._meta["Name"]}'
-        s += f"\nruntime: {self.run_time}"
+        s += f'\nname:    {self._meta["ScopeName"]}'
         s += f"\nstart:   {self.start_time.isoformat()}"
+        s += f"\nruntime: {self.run_time}"
 
         s += "\n\nChannels:"
         for v in self._channels.values():
@@ -417,7 +417,7 @@ class ScopeFile:
         if delimiter in [",", " "]:
             raise ValueError("Parsing of COMMA or SPACE delimited files not available.")
 
-        self._meta["Name"] = line.split(delimiter, maxsplit=1)[-1].rstrip()
+        self._meta["ScopeName"] = line.split(delimiter, maxsplit=1)[-1].rstrip()
         self._meta["File"] = f.readline().split(delimiter, maxsplit=1)[-1].rstrip()
         self._meta["StartTime"] = int(f.readline().split(delimiter)[1])
         self._meta["EndTime"] = int(f.readline().split(delimiter)[1])
