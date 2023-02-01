@@ -67,8 +67,8 @@ requires = [
   "setuptools_scm[toml]>=6.2",
 ]
 
-[tool.setuptools.packages.find]
-where = ["./pytcs"]
+[tool.setuptools.packages]
+find = {}  # Scanning implicit namespaces is active by default
 
 [tool.setuptools_scm]
 write_to = "pytcs/_version.py"
