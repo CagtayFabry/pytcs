@@ -67,15 +67,17 @@ requires = [
   "setuptools_scm[toml]>=6.2",
 ]
 
-[tool.setuptools.packages.find]
-where = ["./pytcs"]
+[tool.setuptools.packages]
+find = {}  # Scanning implicit namespaces is active by default
 
 [tool.setuptools_scm]
 write_to = "pytcs/_version.py"
 
 [tool.pytest.ini_options]
 addopts = "--tb=short --color=yes -rsw --cov=pytcs --cov-report=term-missing:skip-covered --doctest-modules"
-testpaths = "tests"
+testpaths = [
+    "tests",
+]
 # norecursedirs = "doc"
 
 [tool.black]
