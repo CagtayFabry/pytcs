@@ -1,0 +1,64 @@
+{% set pyproject = load_file_data("../../pyproject.toml", from_recipe_dir=True)  %}
+{% set proj = pyproject.get('project') %}
+
+package:
+  name: pytcs
+  version: {{ environ.get('SETUPTOOLS_SCM_PRETEND_VERSION', 999) }}
+
+source:
+    path: ../..
+
+build:
+  number: 0
+  noarch: python
+  script_env:
+    - SETUPTOOLS_SCM_PRETEND_VERSION
+  script: "{{ PYTHON }} -m pip install . -vv"
+requirements:
+  host:
+    - pip
+    - setuptools_scm
+    - python
+  run:
+    - python {{ proj.get("requires-python") }}
+    # dependencies are defined in pyproject.toml
+    {% for dep in proj.get('dependencies') %}
+    - {{ dep.lower() }}
+    {% endfor %}
+
+    # optional feature dependencies
+    {% for feature, dep_list in proj.get('optional-dependencies').items() %}
+    {% if feature == "all" %}
+    {% for dep in dep_list %}
+    - {{ dep }}
+    {% endfor %}
+    {% endif %}
+    {% endfor %}
+
+test:
+  requires:
+    {% for dep in proj.get('optional-dependencies')["test"] %}
+    - {{ dep }}
+    {% endfor %}
+  source_files:
+    - tests
+  imports:
+    - pytcs
+  commands:
+    - pip check
+    - pytest
+
+about:
+  home: https://github.com/CagtayFabry/pytcs/
+  license: BSD-3-Clause
+  license_family: BSD
+  license_file: LICENSE
+  summary: A Python package for reading exported TwinCAT Scope Files.
+  description: |
+    A Python package for reading exported TwinCAT Scope Files.
+  doc_url: https://pytcs.readthedocs.io
+  dev_url: https://github.com/CagtayFabry/pytcs/
+
+extra:
+  recipe-maintainers:
+    - CagtayFabry
