@@ -101,9 +101,7 @@ jobs:
           pip install ${{ env.SDIST_FILE }}[test]
       - name: run pytest
         run: |
-          cd /tmp
           pytest
-          cd -
 #      - name: set pypi test repo defaults
 #        run: |
 #          echo "pypi_repo=testpypi" >> $GITHUB_ENV
