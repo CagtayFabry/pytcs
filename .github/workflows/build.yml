@@ -98,7 +98,7 @@ jobs:
 
       - name: pip dist install
         run: |
-          pip install ${{ env.SDIST_FILE }}[test]
+          pip install ${{ env.SDIST_FILE }}[all,test]
       - name: run pytest
         run: |
           pytest
