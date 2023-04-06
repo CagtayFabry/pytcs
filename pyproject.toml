@@ -54,11 +54,9 @@ test = [
   "pytest-cov",
   "pytest-xdist",
 ]
-
 [project.urls]
 bug_tracker = "https://github.com/CagtayFabry/pytcs/issues"
 repository = "https://github.com/CagtayFabry/pytcs"
-
 
 [build-system]
 build-backend = "setuptools.build_meta"
@@ -74,13 +72,6 @@ find = {}  # Scanning implicit namespaces is active by default
 [tool.setuptools_scm]
 write_to = "pytcs/_version.py"
 
-[tool.pytest.ini_options]
-addopts = "--tb=short --color=yes -rsw --cov=pytcs --cov-report=term-missing:skip-covered --doctest-modules"
-testpaths = [
-    "tests",
-]
-# norecursedirs = "doc"
-
 [tool.black]
 line-length = 88
 target-version = ['py310']
@@ -90,6 +81,31 @@ profile = "black"
 default_section = "THIRDPARTY"
 known_first_party = "pytcs"
 sections = "FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
+
+[tool.pytest.ini_options]
+addopts = "--tb=short --color=yes -rsw --cov=pytcs --cov-report=term-missing:skip-covered --doctest-modules"
+testpaths = [
+    "tests",
+]
+# norecursedirs = "doc"
+
+[tool.coverage.run]
+source = ["pytcs"]
+
+[tool.coverage.report]
+omit = [
+    "pytcs/_version.py",
+    "tests/*",
+]
+exclude_lines = [
+# Have to re-enable the standard pragma
+    "pragma: no cover",
+
+# ignore class __repr__-like functions:
+    "def __repr__",
+    "def __str__",
+    "def _ipython_display_",
+]
 
 [tool.ruff]
 target-version = "py310"  # designated Python version
@@ -119,21 +135,3 @@ known-first-party = ["pytcs"]
 
 [tool.ruff.flake8-import-conventions]
 extend-aliases = {xarray = "xr"}
-
-[tool.coverage.run]
-source = ["pytcs"]
-
-[tool.coverage.report]
-omit = [
-    "pytcs/_version.py",
-    "tests/*",
-]
-exclude_lines = [
-# Have to re-enable the standard pragma
-    "pragma: no cover",
-
-# ignore class __repr__-like functions:
-    "def __repr__",
-    "def __str__",
-    "def _ipython_display_",
-]
