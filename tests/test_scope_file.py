@@ -1,5 +1,6 @@
 """Test basic io functions."""
 from pathlib import Path
+from io import BytesIO, StringIO
 
 import numpy as np
 import pytest
@@ -16,7 +17,7 @@ def file_idfn(path):
 
 
 # generate filenames to import
-files = list(Path(".").rglob("**/data/tc3_scope_*.csv*"))
+files = list(Path(".").rglob("**/data/tc3_scope_*.csv"))
 # files = list(Path(".").rglob("**/data/vs_eng*"))
 
 # list of files broken for loading:
@@ -33,7 +34,8 @@ class TestScopeFile:
     @staticmethod
     @pytest.mark.parametrize("native_dtypes", [False, True])
     @pytest.mark.parametrize("backend", ["pandas"])
-    def test_scope_file(filenames, backend, native_dtypes):
+    @pytest.mark.parametrize("use_buffer", [False, True])
+    def test_scope_file(filenames, backend, native_dtypes, use_buffer):
         if native_dtypes & (backend == "datatable"):
             pytest.skip("unsupported configuration")
 
@@ -41,6 +43,14 @@ class TestScopeFile:
             with pytest.raises(ValueError):
                 ScopeFile(filenames)
             return None
+
+        if use_buffer:
+            if filenames.suffix in [".gz", ".gzip"]:
+                with open(filenames, "rb") as f:
+                    filenames = BytesIO(f.read())
+            else:
+                with open(filenames, "rt") as f:
+                    filenames = StringIO(f.read())
 
         sf = ScopeFile(filenames)
         for c in sf:
