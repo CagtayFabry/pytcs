@@ -9,6 +9,7 @@ from itertools import chain
 from pathlib import Path
 from typing import TYPE_CHECKING, KeysView, Union
 from warnings import warn
+from io import StringIO, BytesIO, IOBase
 
 import numpy as np
 import pandas as pd
@@ -142,10 +143,11 @@ class ScopeFile:
 
     def __init__(
         self,
-        filepath_or_buffer: Union[Path, str],
+        filepath_or_buffer: Union[Path, str, StringIO, BytesIO],
         delimiter: str = None,
         decimal: str = None,
         encoding: str = "utf-8",
+        compression: str = "infer",
     ):
         """Open a TwinCAT Scope file.
 
@@ -163,6 +165,8 @@ class ScopeFile:
             If no explicit value is given this is inferred form the file header.
         encoding
             File encoding (default: 'utf-8')
+        compression
+            File or data compression (default: 'infer' / autodetect)
 
         """
         self._delimiter: str = delimiter
@@ -170,6 +174,7 @@ class ScopeFile:
 
         self._file = filepath_or_buffer  # file handle, buffer etc.
         self._encoding: str = encoding
+        self._compression = compression
         self._meta: dict = {}
         self.start_time: datetime = None
         self.run_time: timedelta = None
@@ -178,7 +183,14 @@ class ScopeFile:
 
         self._data: dict[int, np.ndarray] = {}  # column data
 
-        if Path(filepath_or_buffer).suffix in [".gz", ".gzip"]:
+        # determine correct way to open file
+        if isinstance(filepath_or_buffer, StringIO):
+            self._read_header(filepath_or_buffer)
+            return
+
+        if isinstance(filepath_or_buffer, BytesIO) or Path(
+            filepath_or_buffer
+        ).suffix in [".gz", ".gzip"]:
             fopen = gzip.open
         else:
             fopen = open
@@ -231,13 +243,13 @@ class ScopeFile:
 
     def as_dict(self) -> dict:
         """Convert scope file into regular Python dict."""
-        sf_dict = {
-            "scope_name": self._meta["ScopeName"],
-            "file": self._meta["File"],
-            "start_time": self.start_time,
-            "run_time": self.run_time,
-        }
-        sf_dict["channels"] = {k: v.as_dict() for k, v in self.items()}
+        sf_dict = dict(
+            scope_name=self._meta["ScopeName"],
+            file=self._meta["File"],
+            start_time=self.start_time,
+            run_time=self.run_time,
+            channels={k: v.as_dict() for k, v in self.items()},
+        )
         return sf_dict
 
     def as_pandas(
@@ -451,10 +463,18 @@ class ScopeFile:
             while not self._decimal:
                 self._decimal = self._get_decimal_from_line(f.readline(), delimiter)
 
+        print(data_block_search_index)
+
         # determine the number of header rows
         f.seek(0)
-        _header = f.buffer.read(data_block_search_index)  # read binary from buffer
-        self._header_lines = _header.count(b"\n")
+        if isinstance(f, StringIO):  # we navigate characters
+            _header = f.read(data_block_search_index)
+            self._header_lines = _header.count("\n")
+        else:
+            _header = f.buffer.read(
+                data_block_search_index
+            )  # read to binary position from buffer
+            self._header_lines = _header.count(b"\n")
 
         # build the time column mappings
         self._build_time_mapping(f.readline(), f.readline())
@@ -553,6 +573,9 @@ class ScopeFile:
         self, usecols: list[int], native_dtypes: bool
     ) -> dict[str, np.ndarray]:
         """Read data into dictionary using the pandas backend."""
+        if isinstance(self._file, IOBase):  # read open streams from beginning
+            self._file.seek(0)
+
         df = pd.read_csv(
             self._file,
             delimiter=self._delimiter,
@@ -562,11 +585,12 @@ class ScopeFile:
             usecols=usecols,
             names=self._get_cols(),
             index_col=False,
-            encoding="utf-8",
+            encoding=self._encoding,
             na_values=[" ", "EOF"],
             skip_blank_lines=True,
             engine="c",
             low_memory=False,
+            compression=self._compression,
         )
 
         # self._df = df  # debug
