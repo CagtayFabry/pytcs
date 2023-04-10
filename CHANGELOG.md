@@ -7,6 +7,7 @@
 ## v0.1.0
 
 initial release with basic functions
+
 - open files and read header metadata using `ScopeFile`
 - support different exporting formats (sorted / unsorted time columns, see README)
 - read plain text files or gezipped files directly
