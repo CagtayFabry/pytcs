@@ -108,27 +108,31 @@ exclude_lines = [
 ]
 
 [tool.ruff]
-target-version = "py310"  # designated Python version
+target-version = "py38"  # designated Python version
 line-length = 88
+select = [
+    "B",  # flake8-bugbear
+    "C",  # flake8-comprehensions
+    #"D", # note: all relevant D's will be set by setting pydocstyle.convention=numpy!
+    "E",  # pycodestyles
+    "F",  # pyflakes
+    "W",  # pycodestyle warnings
+    "UP", # pyupgrade
+    "T2",  # flake8-print
+    "I001",  # isort
+    "ICN", # import conventions, e.g. import numpy as np
+    #"B950",  # not yet implemented by Ruff.
+    "RUF100", # ensure 'noqa' declarations are still valid.
+]
 extend-exclude = [
     "__init__.py",
     "./tests/**",
     "./resources/**",
 ]
-# numpy docstrings
-extend-select = ["D"]
-extend-ignore = [
-    "D107",
-    "D203",
-    "D212",
-    "D213",
-    "D402",
-    "D413",
-    "D415",
-    "D416",
-    "D417",
-    "D400", # not working on newline after """
-]
+pydocstyle = {convention = "numpy"}
+pyupgrade = {keep-runtime-typing = true}
+
+mccabe = {max-complexity = 15}  # max branches inside a function.
 
 [tool.ruff.isort]
 known-first-party = ["pytcs"]

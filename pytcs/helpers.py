@@ -33,24 +33,24 @@ def get_tc3_dtypes():
 
 
 # list of channel metadata keys
-_channel_meta_keys = dict(
-    SymbolComment="symbol_comment",
-    DataType="data_type",
-    SampleTime="sample_time",
-    VariableSize="variable_size",
-    SymbolBased="symbol_based",
-    IndexGroup="index_group",
-    IndexOffset="index_offset",
-    SymbolName="symbol_name",
-    NetID="net_id",
-    Port="port",
-    Offset="offset",
-    ScaleFactor="scale_factor",
-    BitMask="bit_mask",
-    Unit="unit",
-    UnitScaleFactor="unit_scale_factor",
-    UnitOffset="unit_offset",
-)
+_channel_meta_keys = {
+    "SymbolComment": "symbol_comment",
+    "DataType": "data_type",
+    "SampleTime": "sample_time",
+    "VariableSize": "variable_size",
+    "SymbolBased": "symbol_based",
+    "IndexGroup": "index_group",
+    "IndexOffset": "index_offset",
+    "SymbolName": "symbol_name",
+    "NetID": "net_id",
+    "Port": "port",
+    "Offset": "offset",
+    "ScaleFactor": "scale_factor",
+    "BitMask": "bit_mask",
+    "Unit": "unit",
+    "UnitScaleFactor": "unit_scale_factor",
+    "UnitOffset": "unit_offset",
+}
 _channel_meta_keys = bidict(_channel_meta_keys)
 
 # Offset from filetime-Origin to 1970-1-1 00.00:00 in MS filetime units

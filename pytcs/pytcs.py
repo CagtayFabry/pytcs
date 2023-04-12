@@ -5,11 +5,11 @@ import gzip
 from collections.abc import ItemsView, Iterator, ValuesView
 from dataclasses import dataclass, field
 from datetime import datetime
+from io import BytesIO, IOBase, StringIO
 from itertools import chain
 from pathlib import Path
 from typing import TYPE_CHECKING, KeysView, Union
 from warnings import warn
-from io import StringIO, BytesIO, IOBase
 
 import numpy as np
 import pandas as pd
@@ -80,6 +80,7 @@ class ScopeChannel:
             warn(
                 f"Mismatch in time and value length for channel {self.name}",
                 UserWarning,
+                stacklevel=2,
             )
             return xr.DataArray(
                 data=self.values[: min(lt, lv)],
@@ -231,6 +232,7 @@ class ScopeFile:
                 warn(
                     "Ignoring option 'native_dtypes' with datatable backend.",
                     UserWarning,
+                    stacklevel=2,
                 )
             data_dict = self._read_datatable(usecols)
         else:
@@ -243,13 +245,13 @@ class ScopeFile:
 
     def as_dict(self) -> dict:
         """Convert scope file into regular Python dict."""
-        sf_dict = dict(
-            scope_name=self._meta["ScopeName"],
-            file=self._meta["File"],
-            start_time=self.start_time,
-            run_time=self.run_time,
-            channels={k: v.as_dict() for k, v in self.items()},
-        )
+        sf_dict = {
+            "scope_name": self._meta["ScopeName"],
+            "file": self._meta["File"],
+            "start_time": self.start_time,
+            "run_time": self.run_time,
+            "channels": {k: v.as_dict() for k, v in self.items()},
+        }
         return sf_dict
 
     def as_pandas(
@@ -463,8 +465,6 @@ class ScopeFile:
             while not self._decimal:
                 self._decimal = self._get_decimal_from_line(f.readline(), delimiter)
 
-        print(data_block_search_index)
-
         # determine the number of header rows
         f.seek(0)
         if isinstance(f, StringIO):  # we navigate characters
@@ -614,7 +614,11 @@ class ScopeFile:
         try:
             import datatable
         except ModuleNotFoundError:
-            warn("'datatable' backend not found, using pandas.", UserWarning)
+            warn(
+                "'datatable' backend not found, using pandas.",
+                UserWarning,
+                stacklevel=2,
+            )
             return self._read_pandas(usecols)
 
         columns = [
@@ -659,7 +663,9 @@ class ScopeFile:
             channels = self._channels.keys()
 
         if diff := (set(channels) - self._channels.keys()):
-            warn(f"Cannot find the following channels: {diff}", UserWarning)
+            warn(
+                f"Cannot find the following channels: {diff}", UserWarning, stacklevel=2
+            )
             channels = self._channels.keys() - channels
         channels = list(channels)
 
@@ -693,6 +699,7 @@ class ScopeFile:
                 warn(
                     "Wrong format in 'SymbolComment' header line, skipping.",
                     UserWarning,
+                    stacklevel=2,
                 )
                 return
             else:
