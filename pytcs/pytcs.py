@@ -306,7 +306,7 @@ class ScopeFile:
 
         _list = [v for v in _dict.values() if not v.empty]
 
-        df = pd.DataFrame().join(_list, how="outer")
+        df = pd.DataFrame().join(_list, how="outer", sort=True)
 
         if time_fmt == "timedelta":
             df.index = pd.TimedeltaIndex((df.index * 1e6).astype(np.int64))

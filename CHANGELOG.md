@@ -1,8 +1,14 @@
 # pytcs
 
-## unreleased
+## v0.1.2
+
+### added
 
 - add support for reading `StringIO` and `BytesIO` #10
+
+### fixed
+
+- explicitly sort index in `ScopeFile.as_pandas` #16
 
 ## v0.1.1
 

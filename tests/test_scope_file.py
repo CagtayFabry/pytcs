@@ -64,7 +64,9 @@ class TestScopeFile:
         )
         assert all([type(v) == np.ndarray for v in sf._data.values()])
 
-        str(sf)
+        # monotonic time
+        for c in sf:
+            assert np.allclose(np.diff(sf[c].time), sf[c].sample_time)
 
     @staticmethod
     @pytest.mark.parametrize("backend", ["pandas"])
