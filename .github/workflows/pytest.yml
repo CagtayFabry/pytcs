@@ -26,6 +26,9 @@ jobs:
           - os: ubuntu-latest
             py: '3.10'
             pandas: '1.4'
+          - os: ubuntu-latest
+            py: '3.10'
+            pandas: '2.*'
     steps:
       - uses: actions/checkout@v3
         with:
@@ -45,6 +48,7 @@ jobs:
           cache-env: true
           extra-specs: |
             python=${{ matrix.py }}
+            pandas=${{ matrix.pandas }}
 
       - name: activate env
         run: micromamba activate pytcs
