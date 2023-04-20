@@ -613,6 +613,9 @@ class ScopeFile:
     def _read_pyarrow(
         self, usecols: list[int], native_dtypes: bool
     ) -> dict[str, np.ndarray]:
+        """Read data into dictionary using the pyarrow backend of pandas."""
+        from itertools import groupby
+
         if not importlib.util.find_spec("pyarrow"):
             warn(
                 "'pyarrow' backend not found, using default pandas implementation.",
@@ -621,36 +624,36 @@ class ScopeFile:
             )
             return self._read_pandas(usecols, native_dtypes)
 
-        """Read data into dictionary using the pandas backend."""
+        def all_equal(iterable):
+            "Returns True if all the elements are equal to each other"
+            g = groupby(iterable)
+            return next(g, True) and not next(g, False)
+        
+        if usecols:
+            warn(
+                "Channel selection is not supported with 'pyarrow' backend, loading all channels.",
+                UserWarning,
+                stacklevel=2,
+            )
+            usecols = None
+
+        if not all_equal(self[c].sample_time for c in self):
+            raise ValueError(
+                "Unsupported file format for 'pyarrow' backend. (unequal sample times)"
+            )
+
         if isinstance(self._file, IOBase):  # read open streams from beginning
             self._file.seek(0)
-
-        if self._delimiter not in (" ", ","):
-            warn(
-                f"""Unsupported delimiter '{self._delimiter}' for pyarrow backend. """
-                """Falling pack to pandas implementation.""",
-                UserWarning,
-                stacklevel=2,
-            )
-            return self._read_pandas(usecols, native_dtypes)
-        if self.decimal not in ("."):
-            warn(
-                f"""Unsupported decimal '{self._decimal}' for pyarrow backend. """
-                """Falling pack to pandas implementation.""",
-                UserWarning,
-                stacklevel=2,
-            )
-            return self._read_pandas(usecols, native_dtypes)
 
         df = pd.read_csv(
             self._file,
             delimiter=self._delimiter,
             skiprows=self._header_lines,
-            # decimal=self._decimal,
+            # decimal=self._decimal, # unsupported with pyarrow
             header=None,
             usecols=usecols,
             names=self._get_cols(),
-            index_col=False,
+            # index_col=False,
             encoding=self._encoding,
             na_values=[" ", "EOF"],
             skip_blank_lines=True,
@@ -659,6 +662,8 @@ class ScopeFile:
             compression=self._compression,
         )
 
+        self._df = df
+        
         if native_dtypes:
             tc3_dtypes = get_tc3_dtypes()
             dtypes_np = {
