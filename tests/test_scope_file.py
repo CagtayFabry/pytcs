@@ -17,7 +17,7 @@ def file_idfn(path):
 
 
 # generate filenames to import
-files = sorted(Path(".").rglob("**/data/tc3_scope_*.csv"))
+files = sorted(Path(".").rglob("**/data/tc3_scope_*.csv*"))
 files_pyarrow = [file for file in files if "noOS" in file.name]
 
 # list of files broken for loading:
