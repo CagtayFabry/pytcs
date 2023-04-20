@@ -1,10 +1,16 @@
 # pytcs
 
+## v0.1.3 (unreleased)
+
+### added
+
+- add experimental support for `pyarrow` pandas backend #18
+
 ## v0.1.2
 
 ### added
 
-- add support for reading `StringIO` and `BytesIO` #10
+- add support for reading `StringIO` and `BytesIO` #11
 
 ### fixed
 

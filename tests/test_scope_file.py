@@ -33,7 +33,7 @@ def filenames(request):
 class TestScopeFile:
     @staticmethod
     @pytest.mark.parametrize("native_dtypes", [False, True])
-    @pytest.mark.parametrize("backend", ["pandas"])
+    @pytest.mark.parametrize("backend", ["pandas", "pyarrow"])
     @pytest.mark.parametrize("use_buffer", [False, True])
     def test_scope_file(filenames, backend, native_dtypes, use_buffer):
         if native_dtypes & (backend == "datatable"):
