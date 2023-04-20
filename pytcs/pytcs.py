@@ -628,10 +628,11 @@ class ScopeFile:
             "Returns True if all the elements are equal to each other"
             g = groupby(iterable)
             return next(g, True) and not next(g, False)
-        
+
         if usecols:
             warn(
-                "Channel selection is not supported with 'pyarrow' backend, loading all channels.",
+                """Channel selection is not supported with 'pyarrow' backend, """
+                """loading all channels.""",
                 UserWarning,
                 stacklevel=2,
             )
@@ -663,7 +664,7 @@ class ScopeFile:
         )
 
         self._df = df
-        
+
         if native_dtypes:
             tc3_dtypes = get_tc3_dtypes()
             dtypes_np = {

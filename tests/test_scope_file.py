@@ -28,6 +28,7 @@ broken_load = ["Seperator_1", "Seperator_4"]
 def filenames(request):
     return request.param
 
+
 @pytest.fixture(scope="module", params=files_pyarrow, ids=file_idfn)
 def filenames_pyarrow(request):
     return request.param
@@ -41,7 +42,7 @@ def _get_as_buffer(file):
     else:
         with open(file, "rt") as f:
             return StringIO(f.read())
-    
+
 
 # Testing files in data
 class TestScopeFile:
@@ -60,7 +61,7 @@ class TestScopeFile:
 
         if use_buffer:
             file = _get_as_buffer(file)
-        
+
         sf = ScopeFile(file)
         for c in sf:
             assert sf[c].info
@@ -82,16 +83,16 @@ class TestScopeFile:
     @pytest.mark.parametrize("use_buffer", [False, True])
     def test_pyarrow_backend(filenames_pyarrow, native_dtypes, use_buffer):
         file = filenames_pyarrow
-        
+
         if use_buffer:
             file = _get_as_buffer(file)
-        
+
         sf = ScopeFile(file)
         for c in sf:
             assert sf[c].info
-        
+
         sf.load(native_dtypes=native_dtypes, backend="pyarrow")
-        
+
         assert len(sf._get_data_cols()) == len(sf._channels)
         assert len(np.unique(sf._get_time_cols())) + len(sf._get_data_cols()) == len(
             sf._data
@@ -101,8 +102,8 @@ class TestScopeFile:
         # monotonic time
         for c in sf:
             assert np.allclose(np.diff(sf[c].time), sf[c].sample_time)
-        
-            
+
+
 #     @staticmethod
 #     @pytest.mark.parametrize("backend", ["pandas"])
 #     def test_to_pandas(filenames, backend):
