@@ -579,6 +579,10 @@ class ScopeFile:
         if isinstance(self._file, IOBase):  # read open streams from beginning
             self._file.seek(0)
 
+        compression = self._compression
+        if isinstance(self._file, BytesIO):  # assume gzip
+            compression = "gzip"
+
         df = pd.read_csv(
             self._file,
             delimiter=self._delimiter,
@@ -593,7 +597,7 @@ class ScopeFile:
             skip_blank_lines=True,
             engine="c",
             low_memory=False,
-            compression=self._compression,
+            compression=compression,
         )
 
         if native_dtypes:
@@ -646,6 +650,10 @@ class ScopeFile:
         if isinstance(self._file, IOBase):  # read open streams from beginning
             self._file.seek(0)
 
+        compression = self._compression
+        if isinstance(self._file, BytesIO):  # assume gzip
+            compression = "gzip"
+
         df = pd.read_csv(
             self._file,
             delimiter=self._delimiter,
@@ -660,7 +668,7 @@ class ScopeFile:
             skip_blank_lines=True,
             engine="pyarrow",
             # low_memory=False, # unsupported with pyarrow
-            compression=self._compression,
+            compression=compression,
         )
 
         self._df = df

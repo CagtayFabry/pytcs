@@ -17,7 +17,7 @@ def file_idfn(path):
 
 
 # generate filenames to import
-files = sorted(Path(".").rglob("**/data/tc3_scope_*.csv*"))
+files = sorted(Path(".").rglob("**/data/tc3_scope_*.csv.gz*"))
 files_pyarrow = [file for file in files if "noOS" in file.name]
 
 # list of files broken for loading:
@@ -104,30 +104,30 @@ class TestScopeFile:
             assert np.allclose(np.diff(sf[c].time), sf[c].sample_time)
 
 
-#     @staticmethod
-#     @pytest.mark.parametrize("backend", ["pandas"])
-#     def test_to_pandas(filenames, backend):
-#         if any(sep in str(filenames) for sep in broken_load):
-#             with pytest.raises(ValueError):
-#                 ScopeFile(filenames)
-#             return None
+    @staticmethod
+    @pytest.mark.parametrize("backend", ["pandas"])
+    def test_to_pandas(filenames, backend):
+        if any(sep in str(filenames) for sep in broken_load):
+            with pytest.raises(ValueError):
+                ScopeFile(filenames)
+            return None
 
-#         sf = ScopeFile(filenames)
-#         sf.load(backend=backend)
-#         df = sf.as_pandas()
+        sf = ScopeFile(filenames)
+        sf.load(backend=backend)
+        df = sf.as_pandas()
 
-#         assert not df.empty
+        assert not df.empty
 
-#     @staticmethod
-#     @pytest.mark.parametrize("backend", ["pandas"])
-#     def test_to_xarray(filenames, backend):
-#         if any(sep in str(filenames) for sep in broken_load):
-#             with pytest.raises(ValueError):
-#                 ScopeFile(filenames)
-#             return None
+    @staticmethod
+    @pytest.mark.parametrize("backend", ["pandas"])
+    def test_to_xarray(filenames, backend):
+        if any(sep in str(filenames) for sep in broken_load):
+            with pytest.raises(ValueError):
+                ScopeFile(filenames)
+            return None
 
-#         sf = ScopeFile(filenames)
-#         sf.load(backend=backend)
-#         ds = sf.as_xarray()
+        sf = ScopeFile(filenames)
+        sf.load(backend=backend)
+        ds = sf.as_xarray()
 
-#         assert ds.variables
+        assert ds.variables

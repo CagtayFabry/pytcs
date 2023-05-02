@@ -6,6 +6,10 @@
 
 - add experimental support for `pyarrow` pandas backend #18
 
+### fixed
+
+- fixed gzip support when reading from `BytesIO` #18
+
 ## v0.1.2
 
 ### added
