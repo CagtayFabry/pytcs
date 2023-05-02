@@ -1,10 +1,20 @@
 # pytcs
 
+## v0.1.3
+
+### added
+
+- add experimental support for `pyarrow` pandas backend #18
+
+### fixed
+
+- fixed gzip support when reading from `BytesIO` #18
+
 ## v0.1.2
 
 ### added
 
-- add support for reading `StringIO` and `BytesIO` #10
+- add support for reading `StringIO` and `BytesIO` #11
 
 ### fixed
 
