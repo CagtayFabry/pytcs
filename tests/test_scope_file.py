@@ -103,7 +103,6 @@ class TestScopeFile:
         for c in sf:
             assert np.allclose(np.diff(sf[c].time), sf[c].sample_time)
 
-
     @staticmethod
     @pytest.mark.parametrize("backend", ["pandas"])
     def test_to_pandas(filenames, backend):
