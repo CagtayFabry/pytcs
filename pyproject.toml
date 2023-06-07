@@ -125,13 +125,15 @@ select = [
     #"B950",  # not yet implemented by Ruff.
     "RUF100", # ensure 'noqa' declarations are still valid.
 ]
+ignore = [
+    "UP006", "UP007", # see ruff GH#4427
+]
 extend-exclude = [
     "__init__.py",
     "./tests/**",
     "./resources/**",
 ]
 pydocstyle = {convention = "numpy"}
-pyupgrade = {keep-runtime-typing = true}
 
 mccabe = {max-complexity = 15}  # max branches inside a function.
 
