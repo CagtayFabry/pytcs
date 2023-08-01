@@ -54,7 +54,7 @@ _channel_meta_keys = {
 _channel_meta_keys = bidict(_channel_meta_keys)
 
 # Offset from filetime-Origin to 1970-1-1 00.00:00 in MS filetime units
-MS_FILETIME_OFFSET = int(116444736000000000)
+MS_FILETIME_OFFSET = 116444736000000000
 
 
 def filetime_to_dt(ft: int) -> datetime:
