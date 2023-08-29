@@ -38,12 +38,13 @@ jobs:
           extras: 'test all'
           setup_requires: 'include'
 
-      - uses: mamba-org/provision-with-micromamba@v15
+      - name: Setup Conda Environment
+        uses: mamba-org/setup-micromamba@v1.4.3
         with:
           environment-file: ./environment.yml
           environment-name: pytcs
-          cache-env: true
-          extra-specs: |
+          cache-environment: true
+          create-args: >-
             python=${{ matrix.py }}
             pandas=${{ matrix.pandas }}
 
