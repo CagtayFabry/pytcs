@@ -18,7 +18,7 @@ repos:
         exclude: '.*.txt|.*.csv'
       - id: end-of-file-fixer
   - repo: https://github.com/executablebooks/mdformat
-    rev: 0.7.16
+    rev: 0.7.17
     hooks:
       - id: mdformat
         additional_dependencies:
@@ -31,17 +31,17 @@ repos:
     hooks:
       - id: black
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.0.281
+    rev: v0.0.287
     hooks:
       - id: ruff
         args:
           - --quiet
           - --fix
   - repo: https://github.com/tox-dev/pyproject-fmt
-    rev: 0.13.0
+    rev: 1.1.0
     hooks:
       - id: pyproject-fmt
   - repo: https://github.com/abravalheri/validate-pyproject
-    rev: v0.13
+    rev: v0.14
     hooks:
       - id: validate-pyproject
