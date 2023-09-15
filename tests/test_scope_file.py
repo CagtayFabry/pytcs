@@ -40,7 +40,7 @@ def _get_as_buffer(file):
         with open(file, "rb") as f:
             return BytesIO(f.read())
     else:
-        with open(file, "rt") as f:
+        with open(file) as f:
             return StringIO(f.read())
 
 

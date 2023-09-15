@@ -3,13 +3,13 @@ from __future__ import annotations
 
 import gzip
 import importlib
-from collections.abc import ItemsView, Iterator, ValuesView
+from collections.abc import ItemsView, Iterator, KeysView, ValuesView
 from dataclasses import dataclass, field
 from datetime import datetime
 from io import BytesIO, IOBase, StringIO
 from itertools import chain
 from pathlib import Path
-from typing import TYPE_CHECKING, KeysView, Union
+from typing import TYPE_CHECKING
 from warnings import warn
 
 import numpy as np
@@ -145,7 +145,7 @@ class ScopeFile:
 
     def __init__(
         self,
-        filepath_or_buffer: Union[Path, str, StringIO, BytesIO],
+        filepath_or_buffer: Path | str | StringIO | BytesIO,
         delimiter: str = None,
         decimal: str = None,
         encoding: str = "utf-8",
@@ -790,7 +790,7 @@ class ScopeFile:
             self._channels[c].info[key] = v
 
     @staticmethod
-    def _get_decimal_from_line(line: str, delimiter: str) -> Union[None, str]:
+    def _get_decimal_from_line(line: str, delimiter: str) -> None | str:
         """Parse the decimal character from a line of numeric values."""
         specials = [
             c for c in line[:-1] if (not (c.isalnum() or c in [delimiter, "-"]))
@@ -810,13 +810,13 @@ class ScopeFile:
             return {k: v for k, v in self._channels.items() if k in channels}
         return self._channels
 
-    def _get_time_cols(self, channels: Union[KeysView, list[str]] = None) -> list[int]:
+    def _get_time_cols(self, channels: KeysView | list[str] = None) -> list[int]:
         """Get all associated time columns from a list of channel names."""
         if channels is None:
             channels = self._channels.keys()
         return [v.time_col for v in self._channels.values() if v.name in channels]
 
-    def _get_data_cols(self, channels: Union[KeysView, list[str]] = None) -> list[int]:
+    def _get_data_cols(self, channels: KeysView | list[str] = None) -> list[int]:
         """Get all associated data columns from a list of channel names."""
         if channels is None:
             channels = self._channels.keys()

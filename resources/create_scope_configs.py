@@ -1,4 +1,4 @@
-"""Create scope exporter configuration files and export sample file.
+r"""Create scope exporter configuration files and export sample file.
 
 The auto generated export settings file can be found at
 `%AppData%\Beckhoff\TcXaeShell Application` .
@@ -14,7 +14,7 @@ from dicttoxml import dicttoxml
 
 _PREFIX = "ExporterSettings"
 
-with open("./csv_properties.yaml", "rt") as f:
+with open("./csv_properties.yaml") as f:
     csv = yaml.safe_load(f.read())
 
 options_full = csv["options"]
