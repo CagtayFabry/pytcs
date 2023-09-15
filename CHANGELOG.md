@@ -1,5 +1,11 @@
 # pytcs
 
+## v0.1.4
+
+### dependencies
+
+- drop support for Python 3.8 #25
+
 ## v0.1.3
 
 ### added
