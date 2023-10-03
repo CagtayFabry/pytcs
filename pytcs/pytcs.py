@@ -564,7 +564,7 @@ class ScopeFile:
         t_1 = [float(n) for n in line_1.replace(decimal, ".").rstrip().split(delimiter)]
         t_1 = [t_1[i] for i in time_indx]
 
-        _time_meta = [(a, b) for a, b in zip(t_0, t_1)]
+        _time_meta = list(zip(t_0, t_1))
         self._time_mapping = {
             c: time_indx[_time_meta.index(_time_meta[i])]
             for i, c in enumerate(time_indx)
