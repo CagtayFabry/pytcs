@@ -1,46 +1,46 @@
 options:
   ScaleValues:
-    - "true"
-    - "false"
+  - 'true'
+  - 'false'
   DecimalMark:
-    - "."
-    - ","
+  - .
+  - ','
   Seperator:
-    - 0  # Tab
-    - 1  # Blank (space)
-    - 2  # Colon
-    - 3  # Semicolon
-    - 4  # Comma
+  - 0    # Tab
+  - 1    # Blank (space)
+  - 2    # Colon
+  - 3    # Semicolon
+  - 4    # Comma
   ArraySeperator:
-    - "Tab"
+  - Tab
   ExcludeDoubleTimestamp:
-    - "true"
-    - "false"
+  - 'true'
+  - 'false'
   HeaderKonfiguration:
-    - "16777215"  # full header
+  - '16777215'    # full header
   SortChannels:
-    - "true"
-    - "false"
+  - 'true'
+  - 'false'
   ContainEOF:
-    - "false"
-    - "true"
+  - 'false'
+  - 'true'
   IncludeTriggerInfos:
-    - "false"
-    - "true"
+  - 'false'
+  - 'true'
   FullTimeStamp:
-    - "false"
-    - "true"
+  - 'false'
+  - 'true'
   IncludeMarkerTables:
-    - "None"
+  - None
   MarkerTableOnlyIncludedChannels:
-    - "false"
-    - "true"
+  - 'false'
+  - 'true'
   MarkerTableOnlyIncludedMarker:
-    - "false"
-    - "true"
+  - 'false'
+  - 'true'
   AdditionalEmptyLine:
-    - "false"
-    - "true"
+  - 'false'
+  - 'true'
   AdditionalArraySeperator:
-    - "false"
-    - "true"
+  - 'false'
+  - 'true'
