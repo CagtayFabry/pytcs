@@ -36,7 +36,7 @@ jobs:
         files: pyproject.toml
         channels: conda-forge
         extras: test all
-        setup_requires: include
+        build_system: include
 
     - name: Setup Conda Environment
       uses: mamba-org/setup-micromamba@v1.8.0
