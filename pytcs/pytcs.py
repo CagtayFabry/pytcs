@@ -1,4 +1,5 @@
 """pytcs - Python API for reading TwinCAT Scope Files."""
+
 from __future__ import annotations
 
 import gzip
