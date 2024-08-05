@@ -27,7 +27,7 @@ repos:
     - mdformat-config
   # ----- Python formatting -----
 - repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.5.0
+  rev: v0.5.6
   hooks:
       # Run ruff linter.
   - id: ruff
@@ -38,13 +38,13 @@ repos:
   - id: ruff-format
   # ----- repo maintenance -----
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-  rev: v2.13.0
+  rev: v2.14.0
   hooks:
   - id: pretty-format-yaml
     args: [--autofix, --indent, '2']
     exclude: devtools/conda.recipe/meta.yaml      # doesn't play nice with jinja
 - repo: https://github.com/tox-dev/pyproject-fmt
-  rev: 2.1.3
+  rev: 2.2.1
   hooks:
   - id: pyproject-fmt
 - repo: https://github.com/abravalheri/validate-pyproject
