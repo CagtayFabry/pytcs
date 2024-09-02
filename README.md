@@ -164,47 +164,47 @@ The following table lists the compatible ✅ and currently uncompatible ❌ opti
 | file and value formats              |     |
 | ----------------------------------- | --- |
 | **ScaleValues**                     |     |
-| true                                | ✅   |
-| false                               | ❌   |
+| true                                | ✅  |
+| false                               | ❌  |
 | **DecimalMark**                     |     |
-| `.`                                 | ✅   |
-| `,`                                 | ✅   |
+| `.`                                 | ✅  |
+| `,`                                 | ✅  |
 | **Seperator**                       |     |
-| Tab                                 | ✅   |
-| Blank (space)                       | ❌   |
-| Colon                               | ✅   |
-| Semicolon                           | ✅   |
-| Comma                               | ❌   |
+| Tab                                 | ✅  |
+| Blank (space)                       | ❌  |
+| Colon                               | ✅  |
+| Semicolon                           | ✅  |
+| Comma                               | ❌  |
 | **ExcludeDoubleTimestamp**          |     |
-| true                                | ✅   |
-| false                               | ✅   |
+| true                                | ✅  |
+| false                               | ✅  |
 | **SortChannels**                    |     |
-| true                                | ✅   |
-| false                               | ✅   |
+| true                                | ✅  |
+| false                               | ✅  |
 | **FullTimeStamp**                   |     |
-| true                                | ❌   |
-| false                               | ✅   |
+| true                                | ❌  |
+| false                               | ✅  |
 | **AdditionalEmptyLine**             |     |
-| true                                | ❌   |
-| false                               | ✅   |
+| true                                | ❌  |
+| false                               | ✅  |
 | **ContainEOF**                      |     |
-| true                                | ✅   |
-| false                               | ✅   |
+| true                                | ✅  |
+| false                               | ✅  |
 | **HeaderKonfiguration**             |     |
-| Full Header                         | ✅   |
+| Full Header                         | ✅  |
 | **ArraySeperator**                  |     |
-| Tab                                 | ✅   |
+| Tab                                 | ✅  |
 | **AdditionalArraySeperator**        |     |
-| true                                | ❌   |
-| false                               | ✅   |
+| true                                | ❌  |
+| false                               | ✅  |
 | **IncludeTriggerInfos**             |     |
-| true                                | ❌   |
-| false                               | ✅   |
+| true                                | ❌  |
+| false                               | ✅  |
 | **IncludeMarkerTables**             |     |
-| None                                | ✅   |
+| None                                | ✅  |
 | **MarkerTableOnlyIncludedChannels** |     |
-| true                                | ❌   |
-| false                               | ✅   |
+| true                                | ❌  |
+| false                               | ✅  |
 | **MarkerTableOnlyIncludedMarker**   |     |
-| true                                | ❌   |
-| false                               | ✅   |
+| true                                | ❌  |
+| false                               | ✅  |
