@@ -36,14 +36,15 @@ jobs:
         fetch-depth: 0   # Fetch all history for all tags and branches
 
     - name: Setup Conda Environment
-      uses: mamba-org/setup-micromamba@v1.4.3
+      uses: mamba-org/setup-micromamba@v2.0.2
       with:
         environment-file: ./devtools/conda.recipe/build_env.yml
         envrionment-name: build_env
         init-shell: >-
           bash
           powershell
-        cache-downloads: true
+        # persist on the same day.
+        cache-environment-key: environment-${{ steps.date.outputs.date }}
 
     - name: activate build env
       run: micromamba activate build_env
