@@ -141,7 +141,7 @@ sf.as_xarray(channels=["var_REAL64", "var_UINT16"])
 ### dtype support
 
 By default, all data will be read as `np.float64`.
-When importing data with `ScopeFile.load` using the option `native_dtypes=True`,  imported data will be converted to their native dtypes.
+When importing data with `ScopeFile.load` using the option `native_dtypes=True`, imported data will be converted to their native dtypes.
 
 | TwinCAT Scope | numpy        | IEC61131-3 |
 | ------------- | ------------ | ---------- |
