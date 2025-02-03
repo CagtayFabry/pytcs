@@ -369,7 +369,7 @@ class ScopeFile:
     def __repr__(self):
         """Show simple text output."""
         s = f"<TwinCAT Scope File at {hex(id(self))}> "
-        s += f'\nname:    {self._meta["ScopeName"]}'
+        s += f"\nname:    {self._meta['ScopeName']}"
         s += f"\nstart:   {self.start_time.isoformat()}"
         s += f"\nruntime: {self.run_time}"
 
