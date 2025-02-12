@@ -18,7 +18,7 @@ repos:
     exclude: .*.txt|.*.csv
   - id: end-of-file-fixer
 - repo: https://github.com/executablebooks/mdformat
-  rev: 0.7.21
+  rev: 0.7.22
   hooks:
   - id: mdformat
     additional_dependencies:
@@ -27,7 +27,7 @@ repos:
     - mdformat-config
   # ----- Python formatting -----
 - repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.8.6
+  rev: v0.9.4
   hooks:
       # Run ruff linter.
   - id: ruff
