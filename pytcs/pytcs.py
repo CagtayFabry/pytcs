@@ -133,7 +133,8 @@ class ScopeChannel:
         else:
             s += f"{len(self.values)}"
         s += f"\nsample time:   {self.sample_time} ms"
-        s += f"\nunits:         {self.units}"
+        if self.units:
+            s += f"\nunits:         {self.units}"
         return s
 
 
@@ -376,7 +377,9 @@ class ScopeFile:
         s += "\n\nChannels:"
         for v in self._channels.values():
             unloaded = "*" if v.values is None else ""
-            s += f"\n  {unloaded}{v.name}: {v.sample_time} ms [{v.units}]"
+            s += f"\n  {unloaded}{v.name}: {v.sample_time} ms"
+            if v.units:
+                s += f" [{v.units}]"
         return s
 
     def to_native_dtypes(self):
