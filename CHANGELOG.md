@@ -2,6 +2,10 @@
 
 ## v0.1.4
 
+### changed
+
+- store `(None)` units as empty strings in `xarray` attributes instead of `(None)` to avoid netCDF incompatibility #48
+
 ### dependencies
 
 - drop support for Python 3.8 #25
