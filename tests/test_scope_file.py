@@ -1,6 +1,7 @@
 """Test basic io functions."""
 from pathlib import Path
 from io import BytesIO, StringIO
+import tempfile
 
 import numpy as np
 import pytest
@@ -130,3 +131,9 @@ class TestScopeFile:
         ds = sf.as_xarray()
 
         assert ds.variables
+
+        # validate writing to netCDF with attributes
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            ncfile = tmpdirname + "/test.nc"
+            ds.to_netcdf(ncfile)
+            assert Path(ncfile).is_file()

@@ -74,25 +74,25 @@ def filetime_to_dt(ft: int) -> datetime:
     return datetime.fromtimestamp((ft - MS_FILETIME_OFFSET) / 1e7, tz=timezone.utc)
 
 
-def parse_unit_string(tc3_unit_string: str) -> Union[str, None]:
+def parse_unit_string(tc3_unit_string: str) -> str:
     """
     Extract unit symbol from unit string imported from TwinCAT3 scope file.
 
     Parameters
     ----------
     tc3_unit_string: str
-        The unit string in TwinCAT format.
+        The unit string in TwinCAT Scope format.
 
     Returns
     -------
     unit : str
-         string containing only the unit
+         String containing only the unit, empty string if no units given (None).
     """
     if not tc3_unit_string:
-        return None
+        return ""
 
     if tc3_unit_string.split(" ")[0] == "(None)":
-        return None
+        return ""
     else:
         return tc3_unit_string.split(" ")[0]
 
