@@ -1,5 +1,12 @@
 # pytcs
 
+## v0.1.5
+
+### changed
+
+- update license information #49
+- add `.github/release.yaml` #49
+
 ## v0.1.4
 
 ### changed
