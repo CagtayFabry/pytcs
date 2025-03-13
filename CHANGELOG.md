@@ -1,11 +1,17 @@
 # pytcs
 
+## v0.1.5
+
+### changed
+
+- update license information #49
+- add `.github/release.yaml` #49
+
 ## v0.1.4
 
 ### changed
 
 - store `(None)` units as empty strings in `xarray` attributes instead of `(None)` to avoid netCDF incompatibility #48
-- update license information #49
 
 ### dependencies
 
