@@ -5,6 +5,7 @@
 ### changed
 
 - store `(None)` units as empty strings in `xarray` attributes instead of `(None)` to avoid netCDF incompatibility #48
+- update license information #49
 
 ### dependencies
 
