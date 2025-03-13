@@ -14,7 +14,7 @@ keywords = [
   "TwinCAT",
   "TwinCAT Scope",
 ]
-license = "BSD-3-Clause"
+license = { file = "LICENSE" }
 authors = [
   { name = "Çağtay Fabry", email = "cagtay.fabry@bam.de" },
 ]
