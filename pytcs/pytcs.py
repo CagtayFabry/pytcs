@@ -610,7 +610,7 @@ class ScopeFile:
                 v.value_col: tc3_dtypes[v.info.get("Data-Type", "REAL64")][0]
                 for v in self._channels.values()
             }
-            dtypes_times = {k: np.float64 for k in self._get_time_cols()}
+            dtypes_times = dict.fromkeys(self._get_time_cols(), np.float64)
             dtypes_np.update(dtypes_times)
             data_dict = {k: df[k].dropna().to_numpy(dtypes_np[k]) for k in df}
         else:
@@ -683,7 +683,7 @@ class ScopeFile:
                 v.value_col: tc3_dtypes[v.info.get("Data-Type", "REAL64")][0]
                 for v in self._channels.values()
             }
-            dtypes_times = {k: np.float64 for k in self._get_time_cols()}
+            dtypes_times = dict.fromkeys(self._get_time_cols(), np.float64)
             dtypes_np.update(dtypes_times)
             data_dict = {k: df[k].dropna().to_numpy(dtypes_np[k]) for k in df}
         else:
