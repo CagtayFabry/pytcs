@@ -6,6 +6,8 @@
 
 - update license information #49
 - add `.github/release.yaml` #49
+- update build workflow #51
+- determine version at runtime #51
 
 ## v0.1.4 (13.03.2025)
 
