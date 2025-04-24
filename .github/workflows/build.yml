@@ -124,7 +124,7 @@ jobs:
     defaults:
       run:
         shell: bash -l {0}
-    name: conda-build
+    name: conda build
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
