@@ -1,6 +1,3 @@
-# pytcs
-/pytcs/_version.py
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -32,7 +29,6 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
-libo/_version.py
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

@@ -1,8 +1,8 @@
 [build-system]
 build-backend = "setuptools.build_meta"
 requires = [
-  "setuptools>=64",
-  "setuptools-scm[toml]>=6.2",
+  "setuptools>=77",
+  "setuptools-scm[toml]>=8",
 ]
 
 [project]
@@ -34,8 +34,7 @@ classifiers = [
   "Programming Language :: Python :: 3.13",
 ]
 dynamic = [
-  # see: https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html#dynamic-metadata
-  "version", # version gets derived from git by setuptools_scm.
+  "version",
 ]
 dependencies = [
   "bidict",
@@ -71,7 +70,7 @@ find = {} # Scanning implicit namespaces is active by default
 #exclude = ["tests", "resources"]
 
 [tool.setuptools_scm]
-write_to = "pytcs/_version.py"
+# enable setuptools-scm versioning
 
 [tool.ruff]
 target-version = "py39" # designated Python version
@@ -79,9 +78,9 @@ line-length = 88
 extend-exclude = [
   "./resources/**",
   "./tests/**",
-  "__init__.py",
 ]
-select = [
+lint.extend-select = [ "I" ]
+extend-select = [
   "B", # flake8-bugbear
   "C", # flake8-comprehensions
   #"D", # note: all relevant D's will be set by setting pydocstyle.convention=numpy!
@@ -108,12 +107,6 @@ isort.known-first-party = [
 ]
 flake8-import-conventions.extend-aliases = { xarray = "xr" }
 
-[tool.isort]
-profile = "black"
-default_section = "THIRDPARTY"
-known_first_party = "pytcs"
-sections = "FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
-
 [tool.pytest.ini_options]
 addopts = "--tb=short --color=yes -rsw --cov=pytcs --cov-report=term-missing:skip-covered --doctest-modules"
 testpaths = [
@@ -128,7 +121,6 @@ source = [
 
 [tool.coverage.report]
 omit = [
-  "pytcs/_version.py",
   "tests/*",
 ]
 exclude_lines = [
