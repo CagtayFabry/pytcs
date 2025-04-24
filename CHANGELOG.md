@@ -1,6 +1,6 @@
 # pytcs
 
-## v0.1.5 (unreleased)
+## v0.1.5 (24.04.2025)
 
 ### changed
 
