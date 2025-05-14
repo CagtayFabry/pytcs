@@ -97,9 +97,11 @@ def parse_unit_string(tc3_unit_string: str) -> str:
         return tc3_unit_string.split(" ")[0]
 
 
-def to_datetime_from_ms(t, origin) -> pd.DatetimeIndex:
+def to_datetime_from_ms(t: np.ndarray, origin: pd.Timestamp) -> pd.DatetimeIndex:
     """
     Fast conversion from time-array in ms (like TC3 data) to UTC pandas.DatetimeIndex .
+
+    The returne pandas.DateTimeIndex is converted to UTC but timezone-naive.
 
     Parameters
     ----------
@@ -115,8 +117,7 @@ def to_datetime_from_ms(t, origin) -> pd.DatetimeIndex:
     """
     t_int = (t * 1e6).astype(np.int64)
     origin_ts = pd.Timestamp(origin).replace(tzinfo=timezone.utc).tz_convert(None)
-    origin_int = origin_ts.to_datetime64().astype(np.int64)
-    return pd.to_datetime(t_int + origin_int)
+    return pd.to_datetime(t_int + origin_ts.value)
 
 
 def make_time_index(

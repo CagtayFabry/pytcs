@@ -117,6 +117,7 @@ class TestScopeFile:
         df = sf.as_pandas()
 
         assert not df.empty
+        assert df.index[0].day == sf.start_time.day
 
     @staticmethod
     @pytest.mark.parametrize("backend", ["pandas"])

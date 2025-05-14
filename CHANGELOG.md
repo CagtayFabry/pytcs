@@ -1,5 +1,11 @@
 # pytcs
 
+## v0.1.6 (14.05.2025)
+
+### fixed
+
+- fix datetime conversion #56
+
 ## v0.1.5 (24.04.2025)
 
 ### changed
