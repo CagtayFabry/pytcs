@@ -4,7 +4,7 @@
 
 ### added
 
-- add `time_mapping_style` parameter to `ScopeFile`
+- add `time_mapping_style` parameter to `ScopeFile` #58
 
 ## v0.1.6 (14.05.2025)
 
