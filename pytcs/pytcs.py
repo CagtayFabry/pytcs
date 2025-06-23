@@ -152,6 +152,7 @@ class ScopeFile:
         decimal: str = None,
         encoding: str = "utf-8",
         compression: str = "infer",
+        time_mapping_style: str = "full",
     ):
         """Open a TwinCAT Scope file.
 
@@ -171,6 +172,13 @@ class ScopeFile:
             File encoding (default: 'utf-8')
         compression
             File or data compression (default: 'infer' / autodetect)
+        time_mapping_style
+            The time column mapping style to use. If "full" every time column
+            will be mapped individually (the default).
+            If setting "reduced", the time mapping will try to ignore duplicate
+            time columns based on the channel metadata by only ready the first
+            time column. This can safe memory for large files depending on the
+            export layout.
 
         """
         self._delimiter: str = delimiter
@@ -541,7 +549,7 @@ class ScopeFile:
             self._read_meta_line(line, delimiter, expected_fmt)
             line = f.readline()
 
-    def _build_time_mapping(self, line_0, line_1):
+    def _build_time_mapping(self, line_0, line_1, time_mapping_style: str = "full"):
         """Build the mapping between channels and associated time columns.
 
         The '_time_mapping' is a shortend mapping assuming that channels with the same
@@ -557,8 +565,19 @@ class ScopeFile:
         ----------
         line_0
         line_1
+        time_mapping_style
+            The mapping style to use. If "full" every time column will be
+            mapped individually (the default).
+            If setting "reduced", the time mapping will try to ignore duplicate time
+            columns based on the channel metadata by only ready the first time column.
 
         """
+        if time_mapping_style not in ["full", "reduced"]:
+            msg = (
+                f"Unknown time column 'time_mapping_style' {time_mapping_style}."
+                "Use 'full' or 'reduced'"
+            )
+            raise ValueError(msg)
         delimiter = self._delimiter
         decimal = self._decimal
 
@@ -569,10 +588,13 @@ class ScopeFile:
         t_1 = [t_1[i] for i in time_indx]
 
         _time_meta = list(zip(t_0, t_1))
-        self._time_mapping = {
-            c: time_indx[_time_meta.index(_time_meta[i])]
-            for i, c in enumerate(time_indx)
-        }
+        if time_mapping_style == "reduced":
+            self._time_mapping = {
+                c: time_indx[_time_meta.index(_time_meta[i])]
+                for i, c in enumerate(time_indx)
+            }
+        else:
+            self._time_mapping = {c: c for c in time_indx}
         self._time_offset = {c: _time_meta[i][0] for i, c in enumerate(time_indx)}
         self._time_sample_time = {c: _time_meta[i][1] for i, c in enumerate(time_indx)}
 

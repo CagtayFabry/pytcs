@@ -1,5 +1,11 @@
 # pytcs
 
+## v0.1.7 (23.06.2025)
+
+### added
+
+- add `time_mapping_style` parameter to `ScopeFile`
+
 ## v0.1.6 (14.05.2025)
 
 ### fixed

@@ -79,33 +79,33 @@ extend-exclude = [
   "./resources/**",
   "./tests/**",
 ]
-lint.extend-select = [ "I" ]
-extend-select = [
+lint.extend-select = [
   "B", # flake8-bugbear
   "C", # flake8-comprehensions
   #"D", # note: all relevant D's will be set by setting pydocstyle.convention=numpy!
   "E",    # pycodestyles
   "F",    # pyflakes
-  "W",    # pycodestyle warnings
-  "UP",   # pyupgrade
-  "T2",   # flake8-print
+  "I",    # isort
   "I001", # isort
   "ICN",  # import conventions, e.g. import numpy as np
   #"B950",  # not yet implemented by Ruff.
   "RUF100", # ensure 'noqa' declarations are still valid.
+  "T2",     # flake8-print
+  "UP",     # pyupgrade
+  "W",      # pycodestyle warnings
 ]
-ignore = [
+lint.ignore = [
   "UP006",
   "UP007", # see ruff GH#4427
 ]
-pydocstyle = { convention = "numpy" }
+lint.flake8-import-conventions.extend-aliases = { xarray = "xr" }
 
-mccabe = { max-complexity = 15 } # max branches inside a function.
-
-isort.known-first-party = [
+lint.isort.known-first-party = [
   "pytcs",
 ]
-flake8-import-conventions.extend-aliases = { xarray = "xr" }
+lint.mccabe = { max-complexity = 15 } # max branches inside a function.
+
+lint.pydocstyle = { convention = "numpy" }
 
 [tool.pytest.ini_options]
 addopts = "--tb=short --color=yes -rsw --cov=pytcs --cov-report=term-missing:skip-covered --doctest-modules"
