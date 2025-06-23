@@ -49,9 +49,10 @@ def _get_as_buffer(file):
 class TestScopeFile:
     @staticmethod
     @pytest.mark.parametrize("native_dtypes", [False, True])
+    @pytest.mark.parametrize("time_mapping_style", ["full", "reduced"])
     @pytest.mark.parametrize("backend", ["pandas"])
     @pytest.mark.parametrize("use_buffer", [False, True])
-    def test_scope_file(filenames, backend, native_dtypes, use_buffer):
+    def test_scope_file(filenames, time_mapping_style, backend, native_dtypes, use_buffer):
         file = filenames
 
         if native_dtypes & (backend == "datatable"):
@@ -63,7 +64,7 @@ class TestScopeFile:
         if use_buffer:
             file = _get_as_buffer(file)
 
-        sf = ScopeFile(file)
+        sf = ScopeFile(file, time_mapping_style=time_mapping_style)
         for c in sf:
             assert sf[c].info
 
