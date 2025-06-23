@@ -552,11 +552,11 @@ class ScopeFile:
     def _build_time_mapping(self, line_0, line_1, time_mapping_style: str = "full"):
         """Build the mapping between channels and associated time columns.
 
-        The '_time_mapping' is a shortend mapping assuming that channels with the same
-        start time (offset) and sample time have he same resulting time columns (as they
-        should).
-        However, some TwinCAT bugs have been reported where time columns contain more
-        values than expected. In this case the approach here can produce errors.
+        By default, each time column is read.
+        If required, a "reduced" time column mapping can be selected to avoid loading
+        duplicate time columns and save memory.
+        However this can fail when the TwinCAT column lengths are exported unevenly.
+        which can lead to memory
 
         This function also determines the start time and sample rates of all channels
         from the first two data rows.
