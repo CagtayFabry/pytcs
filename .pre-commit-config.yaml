@@ -27,7 +27,7 @@ repos:
     - mdformat-config
   # ----- Python formatting -----
 - repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.11.12
+  rev: v0.12.2
   hooks:
       # Run ruff linter.
   - id: ruff
@@ -38,7 +38,7 @@ repos:
   - id: ruff-format
   # ----- repo maintenance -----
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-  rev: v2.14.0
+  rev: v2.15.0
   hooks:
   - id: pretty-format-yaml
     args: [--autofix, --indent, '2']
