@@ -643,10 +643,7 @@ class ScopeFile:
         return data_dict
 
     def _read_polars(self, usecols: list[int], native_dtypes: bool):
-        """Read data into dictionary using the polars backend.
-
-        Reading from in-memory gzip files is not supported.
-        """
+        """Read data into dictionary using the polars backend."""
         import polars as pl
 
         # polars uses different econding names
@@ -654,10 +651,6 @@ class ScopeFile:
 
         if isinstance(self._file, IOBase):  # read open streams from beginning
             self._file.seek(0)
-
-        # if isinstance(self._file, BytesIO):  # assume gzip
-        #     msg = "Cannot read input from 'BytesIO' (e.g. gziped contents)"
-        #     raise ValueError(msg)
 
         df = pl.read_csv(
             self._file,
@@ -671,12 +664,7 @@ class ScopeFile:
             new_columns=[str(a) for a in usecols],  # equivalent to pandas 'names'
             encoding=_encoding,  # equivalent to pandas 'encoding'
             null_values=[" ", "EOF"],  # equivalent to pandas 'na_values'
-            ignore_errors=False,  # pandas 'low_memory=False' (Polars reads eagerly by default)
-            # Polars does not have direct equivalents for:
-            # - index_col (Polars does not use index columns)
-            # - skip_blank_lines (Polars skips blank lines by default)
-            # - engine (Polars uses its own engine)
-            # - compression (Polars auto-detects or can be set via file extension)
+            ignore_errors=False,
         )
 
         data_dict = {
