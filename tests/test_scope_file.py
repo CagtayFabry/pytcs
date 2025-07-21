@@ -18,7 +18,7 @@ def file_idfn(path):
 
 
 # generate filenames to import
-files = sorted(Path(".").rglob("**/data/tc3_scope_*.csv.gz*"))
+files = sorted(Path(".").rglob("**/data/tc3_scope_*.csv*"))
 files_pyarrow = [file for file in files if "noOS" in file.name]
 
 # list of files broken for loading:
@@ -49,7 +49,7 @@ def _get_as_buffer(file):
 class TestScopeFile:
     @staticmethod
     @pytest.mark.parametrize("native_dtypes", [False, True])
-    @pytest.mark.parametrize("backend", ["pandas"])
+    @pytest.mark.parametrize("backend", ["pandas", "polars"])
     @pytest.mark.parametrize("use_buffer", [False, True])
     def test_scope_file(filenames, backend, native_dtypes, use_buffer):
         file = filenames
@@ -105,7 +105,7 @@ class TestScopeFile:
             assert np.allclose(np.diff(sf[c].time), sf[c].sample_time)
 
     @staticmethod
-    @pytest.mark.parametrize("backend", ["pandas"])
+    @pytest.mark.parametrize("backend", ["pandas", "polars"])
     def test_to_pandas(filenames, backend):
         if any(sep in str(filenames) for sep in broken_load):
             with pytest.raises(ValueError):
@@ -120,7 +120,7 @@ class TestScopeFile:
         assert df.index[0].day == sf.start_time.day
 
     @staticmethod
-    @pytest.mark.parametrize("backend", ["pandas"])
+    @pytest.mark.parametrize("backend", ["pandas", "polars"])
     def test_to_xarray(filenames, backend):
         if any(sep in str(filenames) for sep in broken_load):
             with pytest.raises(ValueError):

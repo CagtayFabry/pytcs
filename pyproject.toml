@@ -57,10 +57,12 @@ optional-dependencies.export = [
 optional-dependencies.test = [
   # needed to run the test suite
   "netcdf4",
+  "polars",
   "pyarrow",
   "pytest",
   "pytest-cov",
   "pytest-xdist",
+  "xarray",
 ]
 urls.bug_tracker = "https://github.com/CagtayFabry/pytcs/issues"
 urls.repository = "https://github.com/CagtayFabry/pytcs"

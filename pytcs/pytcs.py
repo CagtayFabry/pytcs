@@ -216,7 +216,7 @@ class ScopeFile:
             Default: ``False``
         backend
             The CSV backend to use.
-            Available backends are ``pandas`` (the default) and ``datatable``.
+            Available backends are ``pandas`` (the default), ``polars`` and ``datatable``.
             Reading with pandas uses the ``engine=c``.
             For larger files, the ``datatable`` backend can be faster.
             The ``datatable`` backend is considered experimental and has known bugs with
@@ -232,6 +232,8 @@ class ScopeFile:
             data_dict = self._read_pandas(usecols, native_dtypes)
         elif backend == "pyarrow":
             data_dict = self._read_pyarrow(usecols, native_dtypes)
+        elif backend == "polars":
+            data_dict = self._read_polars(usecols, native_dtypes)
         elif backend == "datatable":
             if native_dtypes:
                 warn(
@@ -615,6 +617,49 @@ class ScopeFile:
             data_dict = {k: df[k].dropna().to_numpy(dtypes_np[k]) for k in df}
         else:
             data_dict = {k: df[k].dropna().to_numpy(np.float64) for k in df}
+
+        return data_dict
+
+    def _read_polars(self, usecols: list[int], native_dtypes: bool):
+        """Read data into dictionary using the polars backend.
+
+        Reading from in-memory gzip files is not supported.
+        """
+        import polars as pl
+
+        # polars uses different econding names
+        _encoding = "utf8" if self._encoding == "utf-8" else self._encoding
+
+        if isinstance(self._file, IOBase):  # read open streams from beginning
+            self._file.seek(0)
+
+        # if isinstance(self._file, BytesIO):  # assume gzip
+        #     msg = "Cannot read input from 'BytesIO' (e.g. gziped contents)"
+        #     raise ValueError(msg)
+
+        df = pl.read_csv(
+            self._file,
+            separator=self._delimiter,  # equivalent to pandas 'delimiter'
+            skip_rows=self._header_lines,  # equivalent to pandas 'skiprows'
+            decimal_comma=(
+                self._decimal == ","
+            ),  # Polars uses decimal_comma for ',' as decimal
+            has_header=False,  # pandas 'header=None'
+            columns=usecols,  # equivalent to pandas 'usecols'
+            new_columns=[str(a) for a in usecols],  # equivalent to pandas 'names'
+            encoding=_encoding,  # equivalent to pandas 'encoding'
+            null_values=[" ", "EOF"],  # equivalent to pandas 'na_values'
+            ignore_errors=False,  # pandas 'low_memory=False' (Polars reads eagerly by default)
+            # Polars does not have direct equivalents for:
+            # - index_col (Polars does not use index columns)
+            # - skip_blank_lines (Polars skips blank lines by default)
+            # - engine (Polars uses its own engine)
+            # - compression (Polars auto-detects or can be set via file extension)
+        )
+
+        data_dict = {
+            int(k): df.get_column(k).drop_nulls().to_numpy() for k in df.columns
+        }
 
         return data_dict
 
