@@ -224,7 +224,7 @@ class ScopeFile:
             Default: ``False``
         backend
             The CSV backend to use.
-            Available backends are ``pandas`` (the default), ``polars`` and ``datatable``.
+            Available backends are ``pandas`` (default), ``polars`` and ``datatable``.
             Reading with pandas uses the ``engine=c``.
             For larger files, the ``datatable`` backend can be faster.
             The ``datatable`` backend is considered experimental and has known bugs with
