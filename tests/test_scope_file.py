@@ -50,7 +50,7 @@ class TestScopeFile:
     @staticmethod
     @pytest.mark.parametrize("native_dtypes", [False, True])
     @pytest.mark.parametrize("time_mapping_style", ["full", "reduced"])
-    @pytest.mark.parametrize("backend", ["pandas", "polars"]])
+    @pytest.mark.parametrize("backend", ["pandas", "polars"])
     @pytest.mark.parametrize("use_buffer", [False, True])
     def test_scope_file(filenames, time_mapping_style, backend, native_dtypes, use_buffer):
         file = filenames
