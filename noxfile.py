@@ -9,8 +9,9 @@ from pathlib import Path
 import nox
 
 DIR = Path(__file__).parent.resolve()
+PROJECT = nox.project.load_toml()
 
-nox.needs_version = ">=2024.3.2"
+nox.needs_version = ">=2025.2.9"
 nox.options.sessions = ["lint", "tests"]
 nox.options.default_venv_backend = "uv|virtualenv"
 
@@ -29,14 +30,17 @@ def tests(session: nox.Session) -> None:
     """
     Run the unit and regular tests.
     """
-    session.install(".[test]")
+    test_deps = nox.project.dependency_groups(PROJECT, "test")
+    session.install("-e .", *test_deps)
+    session.run("uv", "pip", "list")
     session.run("pytest", *session.posargs)
 
 
 @nox.session(python=["3.10"])
-@nox.parametrize("numpy,pandas", [("1.*", "2.*")])
+@nox.parametrize("numpy,pandas", [("1.*", "2.*"), ("2.*", "2.*")])
 def tests_compat(session, pandas, numpy):
     session.install(".[test]", f"pandas=={pandas}", f"numpy=={numpy}")
+    session.run("uv", "pip", "list")
     session.run("pytest", *session.posargs)
 
 

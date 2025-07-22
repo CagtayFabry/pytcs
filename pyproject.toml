@@ -63,6 +63,20 @@ optional-dependencies.test = [
 urls.bug_tracker = "https://github.com/CagtayFabry/pytcs/issues"
 urls.repository = "https://github.com/CagtayFabry/pytcs"
 
+[dependency-groups]
+test = [
+  "pytest",
+  "pytest-cov",
+  "pytest-xdist",
+  { include-group = "polars" },
+  { include-group = "pyarrow" },
+  { include-group = "xarray" },
+]
+
+polars = [ "polars" ]
+pyarrow = [ "pyarrow" ]
+xarray = [ "netcdf4", "pint", "xarray" ]
+
 [tool.setuptools.packages]
 find = {} # Scanning implicit namespaces is active by default
 #exclude = ["tests", "resources"]
@@ -71,7 +85,7 @@ find = {} # Scanning implicit namespaces is active by default
 # enable setuptools-scm versioning
 
 [tool.ruff]
-target-version = "py39" # designated Python version
+target-version = "py310" # designated Python version
 line-length = 88
 extend-exclude = [
   "./resources/**",
