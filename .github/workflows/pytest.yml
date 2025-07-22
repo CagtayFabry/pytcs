@@ -35,13 +35,10 @@ jobs:
         nox_session: ${{ fromJson(needs.list_nox_test_sessions.outputs.matrix) }}
     steps:
     - uses: actions/checkout@v4
-    - uses: actions/setup-python@v5
-      with:
-        python-version: '3.13'
     - name: Install uv
       uses: astral-sh/setup-uv@v6
       with:
-        version: "0.8.0"
+        version: 0.8.0
     - name: install nox
       run: uv pip install nox --system
     - name: run nox test matrix
