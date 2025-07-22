@@ -8,60 +8,6 @@ defaults:
     shell: bash -l {0}
 
 jobs:
-  # main:
-  #   name: pytest
-  #   runs-on: ${{ matrix.os }}
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       os: [ubuntu-latest]
-  #       py: ['3.9', '3.10', '3.11', '3.12']
-  #       pandas: [2.*]
-  #       include:
-  #       - os: ubuntu-latest
-  #         py: '3.10'
-  #         pandas: '1.4'
-  #       - os: ubuntu-latest
-  #         py: '3.10'
-  #         pandas: 1.*
-  #   steps:
-  #   - uses: actions/checkout@v4
-  #     with:
-  #       fetch-depth: '0'   # Fetch all history for all tags and branches
-
-  #   - uses: CagtayFabry/pydeps2env@v1.3.0
-  #     with:
-  #       files: pyproject.toml
-  #       channels: conda-forge
-  #       extras: test all
-  #       build_system: include
-
-  #   - name: Setup Conda Environment
-  #     uses: mamba-org/setup-micromamba@v2.0.2
-  #     with:
-  #       environment-file: ./environment.yml
-  #       environment-name: pytcs
-  #       cache-environment: true
-  #       init-shell: >-
-  #         bash
-  #         powershell
-  #       # persist on the same day.
-  #       cache-environment-key: environment-${{ steps.date.outputs.date }}
-  #       create-args: >-
-  #         python=${{ matrix.py }}
-  #         pandas=${{ matrix.pandas }}
-
-  #   - name: activate env
-  #     run: micromamba activate pytcs
-
-  #   - name: pip installs
-  #     run: |
-  #       python -m pip install -e .
-
-  #   - name: run pytest
-  #     run: |
-  #       pytest
-
   list_nox_test_sessions:
     runs-on: ubuntu-latest
     steps:
@@ -74,19 +20,19 @@ jobs:
     - name: list all test sessions
       id: set-matrix
       run: echo "::set-output name=matrix::$(nox -s gha_list -- tests tests_compat)"
-
     # save the list into the outputs
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
 
   run_all_tests:
+    name: pytest
     needs: list_nox_test_sessions
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest]
         nox_session: ${{ fromJson(needs.list_nox_test_sessions.outputs.matrix) }}
-    name: Run nox session ${{ matrix.nox_session }}
-    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v5
