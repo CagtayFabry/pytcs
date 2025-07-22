@@ -9,6 +9,9 @@ __pycache__/
 # Pycharm
 .idea*
 
+# VSCode
+.vscode/
+
 # Distribution / packaging
 .Python
 build/
