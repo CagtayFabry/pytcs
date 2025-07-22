@@ -24,7 +24,7 @@ def lint(session: nox.Session) -> None:
     session.run("pre-commit", "run", "--all-files", *session.posargs)
 
 
-@nox.session(python=["3.9", "3.10", "3.11", "3.12", "3.13"])
+@nox.session(python=["3.10", "3.11", "3.12", "3.13"])
 def tests(session: nox.Session) -> None:
     """
     Run the unit and regular tests.
@@ -33,16 +33,8 @@ def tests(session: nox.Session) -> None:
     session.run("pytest", *session.posargs)
 
 
-@nox.session(python=["3.12"])
-@nox.parametrize("pandas", ["1.*"])
-def tests_with_params(session, pandas):
-    session.install(".[test]")
-    session.install(f"pandas=={pandas}")
-    session.run("pytest", *session.posargs)
-
-
-@nox.session
-@nox.parametrize("python,numpy,pandas", [("3.9", "1.*", "1.*")])
+@nox.session(python=["3.10"])
+@nox.parametrize("numpy,pandas", [("1.*", "1.*")])
 def tests_compat(session, pandas, numpy):
     session.install(".[test]", f"pandas=={pandas}", f"numpy=={numpy}")
     session.run("pytest", *session.posargs)
@@ -113,17 +105,9 @@ def build(session: nox.Session) -> None:
     session.run("python", "-m", "build")
 
 
-@nox.session(python=False)
-def gha_list(session):
-    """Prints all sessions available for <base_session_name>, for GithubActions.
-
-    (mandatory arg: <base_session_name>)
-    """
-
-    # get the desired base session to generate the list for
-    if len(session.posargs) != 1:
-        raise ValueError("This session has a mandatory argument: <base_session_name>")
-    session_func = globals()[session.posargs[0]]
+def _get_session_config(arg) -> list[str]:
+    """Get session configuration list of strings."""
+    session_func = globals()[arg]
 
     # list all sessions for this base session
     try:
@@ -137,6 +121,26 @@ def gha_list(session):
                 session_func.python, session_func.parametrize
             )
         ]
+
+    return sessions_list
+
+
+@nox.session(python=False)
+def gha_list(session):
+    """Prints all sessions available for <base_session_name>, for GithubActions.
+
+    (mandatory arg: <base_session_name>)
+
+    source: https://stackoverflow.com/a/66747360/11242411
+    """
+
+    # get the desired base session to generate the list for
+    if len(session.posargs) < 1:
+        raise ValueError("This session has a mandatory argument: <base_session_name>")
+
+    sessions_list = [_get_session_config(arg) for arg in session.posargs]
+
+    sessions_list = list(itertools.chain.from_iterable(sessions_list))
 
     # print the list so that it can be caught by GHA.
     # Note that json.dumps is optional since this is a list of string.
