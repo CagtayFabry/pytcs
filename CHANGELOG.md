@@ -1,5 +1,11 @@
 # pytcs
 
+## v0.2.0 (unreleased)
+
+### added
+
+- add `polars` backend to `ScopeFile.load` #60
+
 ## v0.1.7 (23.06.2025)
 
 ### added

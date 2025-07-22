@@ -51,7 +51,9 @@ def tests_compat(session, pandas, numpy):
 @nox.session(reuse_venv=True)
 def docs(session: nox.Session) -> None:
     """
-    Build the docs. Pass --non-interactive to avoid serving. First positional argument is the target directory.
+    Build the docs. Pass --non-interactive to avoid serving.
+
+    First positional argument is the target directory.
     """
 
     parser = argparse.ArgumentParser()
@@ -113,7 +115,10 @@ def build(session: nox.Session) -> None:
 
 @nox.session(python=False)
 def gha_list(session):
-    """(mandatory arg: <base_session_name>) Prints all sessions available for <base_session_name>, for GithubActions."""
+    """Prints all sessions available for <base_session_name>, for GithubActions.
+
+    (mandatory arg: <base_session_name>)
+    """
 
     # get the desired base session to generate the list for
     if len(session.posargs) != 1:
@@ -122,14 +127,12 @@ def gha_list(session):
 
     # list all sessions for this base session
     try:
-        session_func.parametrize
+        session_func.parametrize  # noqa: B018
     except AttributeError:
-        sessions_list = [
-            "%s-%s" % (session_func.__name__, py) for py in session_func.python
-        ]
+        sessions_list = [f"{session_func.__name__}-{py}" for py in session_func.python]
     else:
         sessions_list = [
-            "%s-%s(%s)" % (session_func.__name__, py, param)
+            f"{session_func.__name__}-{py}({param})"
             for py, param in itertools.product(
                 session_func.python, session_func.parametrize
             )
@@ -138,4 +141,4 @@ def gha_list(session):
     # print the list so that it can be caught by GHA.
     # Note that json.dumps is optional since this is a list of string.
     # However it is to remind us that GHA expects a well-formatted json list of strings.
-    print(json.dumps(sessions_list))
+    print(json.dumps(sessions_list))  # noqa: T201
