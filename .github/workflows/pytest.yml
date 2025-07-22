@@ -1,11 +1,6 @@
 name: pytest
 
-on: push
-
-# execute commands with conda aware shell by default:
-defaults:
-  run:
-    shell: bash -l {0}
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
   list_nox_test_sessions:
