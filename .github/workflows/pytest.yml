@@ -91,5 +91,11 @@ jobs:
     name: Run nox session ${{ matrix.nox_session }}
     runs-on: ubuntu-latest
     steps:
-      # (other steps before this: checkout code, install python)
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+    - name: install nox & uv
+      run: pip install nox uv
+    - name: run nox test matrix
     - run: nox -s "${{ matrix.nox_session }}"

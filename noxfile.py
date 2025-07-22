@@ -34,7 +34,7 @@ def tests(session: nox.Session) -> None:
 
 
 @nox.session(python=["3.10"])
-@nox.parametrize("numpy,pandas", [("1.*", "1.*")])
+@nox.parametrize("numpy,pandas", [("1.*", "2.*")])
 def tests_compat(session, pandas, numpy):
     session.install(".[test]", f"pandas=={pandas}", f"numpy=={numpy}")
     session.run("pytest", *session.posargs)
