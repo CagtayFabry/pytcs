@@ -18,7 +18,7 @@ license = { file = "LICENSE" }
 authors = [
   { name = "Çağtay Fabry", email = "cagtay.fabry@bam.de" },
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Science/Research",
@@ -27,7 +27,6 @@ classifiers = [
   "Operating System :: OS Independent",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
@@ -37,12 +36,11 @@ dynamic = [
 ]
 dependencies = [
   "bidict",
-  "numpy",
+  "numpy>=2",
   "pandas>=2",
 ]
 optional-dependencies.all = [
   "bottleneck>=1.3",
-  "pint>=0.18",
   "xarray>=0.15",
 ]
 optional-dependencies.export = [
@@ -75,7 +73,7 @@ test = [
 
 polars = [ "polars" ]
 pyarrow = [ "pyarrow" ]
-xarray = [ "netcdf4", "pint", "xarray" ]
+xarray = [ "netcdf4", "xarray" ]
 
 [tool.setuptools.packages]
 find = {} # Scanning implicit namespaces is active by default
@@ -85,7 +83,7 @@ find = {} # Scanning implicit namespaces is active by default
 # enable setuptools-scm versioning
 
 [tool.ruff]
-target-version = "py310" # designated Python version
+target-version = "py311" # designated Python version
 line-length = 88
 extend-exclude = [
   "./resources/**",
