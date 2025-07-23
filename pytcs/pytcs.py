@@ -224,11 +224,8 @@ class ScopeFile:
             Default: ``False``
         backend
             The CSV backend to use.
-            Available backends are ``pandas`` (default), ``polars`` and ``datatable``.
+            Available backends are ``pandas`` (default) and ``polars``.
             Reading with pandas uses the ``engine=c``.
-            For larger files, the ``datatable`` backend can be faster.
-            The ``datatable`` backend is considered experimental and has known bugs with
-            ``datatable<1.1.0`` for some CSV formats.
 
         """
         usecols = self._get_usecols(channels)
@@ -242,14 +239,6 @@ class ScopeFile:
             data_dict = self._read_pyarrow(usecols, native_dtypes)
         elif backend == "polars":
             data_dict = self._read_polars(usecols, native_dtypes)
-        elif backend == "datatable":
-            if native_dtypes:
-                warn(
-                    "Ignoring option 'native_dtypes' with datatable backend.",
-                    UserWarning,
-                    stacklevel=2,
-                )
-            data_dict = self._read_datatable(usecols)
         else:
             raise ValueError(f"Unknown CSV backend: '{backend}'.")
 
@@ -589,7 +578,7 @@ class ScopeFile:
         t_1 = [float(n) for n in line_1.replace(decimal, ".").rstrip().split(delimiter)]
         t_1 = [t_1[i] for i in time_indx]
 
-        _time_meta = list(zip(t_0, t_1))
+        _time_meta = list(zip(t_0, t_1, strict=False))
         if time_mapping_style == "reduced":
             self._time_mapping = {
                 c: time_indx[_time_meta.index(_time_meta[i])]
@@ -667,9 +656,26 @@ class ScopeFile:
             ignore_errors=False,
         )
 
-        data_dict = {
-            int(k): df.get_column(k).drop_nulls().to_numpy() for k in df.columns
-        }
+        if native_dtypes:
+            tc3_dtypes = get_tc3_dtypes()
+            dtypes_np = {
+                v.value_col: tc3_dtypes[v.info.get("Data-Type", "REAL64")][0]
+                for v in self._channels.values()
+            }
+            dtypes_times = dict.fromkeys(self._get_time_cols(), np.float64)
+            dtypes_np.update(dtypes_times)
+            data_dict = {
+                int(k): df.get_column(k)
+                .drop_nulls()
+                .to_numpy()
+                .astype(dtypes_np[int(k)])
+                for k in df.columns
+            }
+        else:
+            data_dict = {
+                int(k): df.get_column(k).drop_nulls().to_numpy().astype(np.float64)
+                for k in df.columns
+            }
 
         return data_dict
 
@@ -746,42 +752,6 @@ class ScopeFile:
 
         return data_dict
 
-    def _read_datatable(self, usecols: list[int]) -> dict[str, np.ndarray]:
-        """Read data into dictionary using the datatable backend."""
-        try:
-            import datatable
-        except ModuleNotFoundError:
-            warn(
-                "'datatable' backend not found, using pandas.",
-                UserWarning,
-                stacklevel=2,
-            )
-            return self._read_pandas(usecols)
-
-        columns = [
-            i in usecols
-            for i in range(len(self._get_cols()) + self._line_end_delimiter)
-        ]
-
-        df = datatable.fread(
-            self._file,
-            header=False,
-            columns=columns,
-            skip_to_line=self._header_lines,
-            fill=True,
-            sep=self._delimiter,
-            dec=self._decimal,
-            skip_blank_lines=True,
-            na_strings=["EOF"],
-        )
-        # self._df = df  # debug
-
-        data_dict = {
-            k: df[:, i].to_numpy(np.float64).squeeze() for i, k in enumerate(usecols)
-        }
-        data_dict = {k: v[~np.isnan(v)] for k, v in data_dict.items()}
-        return data_dict
-
     def _update_time_links(self):
         """Update the time column data references."""
         for k, v in self._time_mapping.items():
@@ -845,7 +815,7 @@ class ScopeFile:
                     f": {len(self._channels.keys())}, {len(values)}"
                 )
 
-        for c, v in zip(self._channels.keys(), values):
+        for c, v in zip(self._channels.keys(), values, strict=False):
             self._channels[c].info[key] = v
 
     @staticmethod

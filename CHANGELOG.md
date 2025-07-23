@@ -2,9 +2,19 @@
 
 ## v0.2.0 (unreleased)
 
-### added
+### changed
 
 - add `polars` backend to `ScopeFile.load` #60
+- remove `datatable` backend from `ScopeFile.load` #62
+
+### dependencies
+
+- pin `python>=3.11`, `numpy>=2`, `pandas>=2` #62
+- remove `pint` dependency #62
+
+### general
+
+- update noxfile and pytest github action #62
 
 ## v0.1.7 (23.06.2025)
 

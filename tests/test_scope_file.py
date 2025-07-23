@@ -7,6 +7,7 @@ import numpy as np
 import pytest
 
 from pytcs.pytcs import ScopeFile
+from pytcs.helpers import get_tc3_dtypes
 
 if np.get_printoptions()["threshold"] == 1000:
     np.set_printoptions(threshold=998)
@@ -55,9 +56,6 @@ class TestScopeFile:
     def test_scope_file(filenames, time_mapping_style, backend, native_dtypes, use_buffer):
         file = filenames
 
-        if native_dtypes & (backend == "datatable"):
-            pytest.skip("unsupported configuration (datatable + native)")
-
         if any(sep in str(file) for sep in broken_load):
             pytest.skip("unsupported file format (separators)")
 
@@ -79,6 +77,14 @@ class TestScopeFile:
         # monotonic time
         for c in sf:
             assert np.allclose(np.diff(sf[c].time), sf[c].sample_time)
+
+        if native_dtypes:
+            tc3 = get_tc3_dtypes()
+            for c in sf:
+                if c.startswith("var_"):
+                    _np_type = tc3[c[4:]][0]
+                    assert sf[c]._values.dtype == _np_type
+
 
     @staticmethod
     @pytest.mark.parametrize("native_dtypes", [False, True])

@@ -18,7 +18,7 @@ df = sf.as_pandas()  # convert to pandas DataFrame
 
 ### installation
 
-Install using `pip` or `conda/mamba`:
+Install using `pip/uv` or `conda/mamba`:
 
 ```
 pip install pytcs
@@ -87,12 +87,10 @@ sf["func_units_scaled"]
 ### CSV backends
 
 The default implementation of `pytcs` uses `pandas.read_csv` for parsing CSV files.
-The `pandas` aims to provide the most flexible support for the various formatting options provided by the TwinCAT Scope export tool.
+The `pandas` backend aims to provide the most flexible support for the various formatting options provided by the TwinCAT Scope export tool.
 
-To improve performance for large files, [datatable](https://github.com/h2oai/datatable) can be set as an alternative CSV backend.
-Datatable can be selected by using `ScopeFile.read(..., backend="datatable")` .
-However it should be considered **experimental** since some CSV formats can run into known issues and errors.
-If you want to use the `datatable` backend it is recommended run detailed tests with the target format (or change the target format).
+To improve performance for large files, [polars](https://pola.rs/) can be set as an alternative CSV backend.
+Polars can be selected by using `ScopeFile.load(..., backend="polars")`.
 
 ### exporting to pandas and xarray
 
