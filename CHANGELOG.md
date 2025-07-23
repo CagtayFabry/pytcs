@@ -5,7 +5,7 @@
 ### changed
 
 - add `polars` backend to `ScopeFile.load` #60
-- add `datatable` backend from `ScopeFile.load` #62
+- remove `datatable` backend from `ScopeFile.load` #62
 
 ### dependencies
 
