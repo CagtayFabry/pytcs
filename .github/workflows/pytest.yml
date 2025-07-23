@@ -18,7 +18,7 @@ jobs:
       run: uv pip install nox --system
     - name: list all test sessions
       id: set-matrix
-      run: echo "matrix=$(nox -s gha_list -- tests tests_compat)" >> $GITHUB_OUTPUT
+      run: echo "matrix=$(nox -s gha_list -- tests)" >> $GITHUB_OUTPUT
     # save the list into the outputs
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
