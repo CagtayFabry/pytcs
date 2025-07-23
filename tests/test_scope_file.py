@@ -7,6 +7,7 @@ import numpy as np
 import pytest
 
 from pytcs.pytcs import ScopeFile
+from pytcs.helpers import get_tc3_dtypes
 
 if np.get_printoptions()["threshold"] == 1000:
     np.set_printoptions(threshold=998)
@@ -76,13 +77,13 @@ class TestScopeFile:
         # monotonic time
         for c in sf:
             assert np.allclose(np.diff(sf[c].time), sf[c].sample_time)
-        
+
         if native_dtypes:
+            tc3 = get_tc3_dtypes()
             for c in sf:
-                if c.startswith("var_") and c!="var_BIT":
-                    _np_type = np.dtype(c[4:].replace("REAL","float").lower())
+                if c.startswith("var_"):
+                    _np_type = tc3[c[4:]][0]
                     assert sf[c]._values.dtype == _np_type
-            assert sf["var_BIT"]._values.dtype == np.dtype("bool")
 
 
     @staticmethod
