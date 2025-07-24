@@ -66,6 +66,7 @@ urls.repository = "https://github.com/CagtayFabry/pytcs"
 
 [dependency-groups]
 test = [
+  "netcdf4",
   "polars",
   "pyarrow",
   "pytest",
