@@ -5,9 +5,8 @@ from typing import Union
 
 import numpy as np
 import pandas as pd
-from bidict import bidict
-
 import polars as pl
+from bidict import bidict
 
 
 def get_tc3_dtypes():

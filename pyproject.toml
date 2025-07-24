@@ -65,11 +65,11 @@ urls.repository = "https://github.com/CagtayFabry/pytcs"
 
 [dependency-groups]
 test = [
+  "polars",
+  "pyarrow",
   "pytest",
   "pytest-cov",
   "pytest-xdist",
-  "polars",
-  "pyarrow",
   "xarray",
 ]
 polars = [ "polars" ]

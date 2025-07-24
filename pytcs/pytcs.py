@@ -210,7 +210,7 @@ class ScopeFile:
         with fopen(self._file, "rt", encoding=self._encoding) as f:
             self._read_header(f)
 
-    def load(self, channels: list[str] = None, native_dtypes=False, backend="pandas"):
+    def load(self, channels: list[str] = None, native_dtypes=False, backend="polars"):
         """Load one or more channels into memory.
 
         Parameters
