@@ -14,7 +14,7 @@ def get_tc3_dtypes():
     import numpy as np
 
     tc3_dtypes = {
-        "BIT": (np.bool_, "boolean", pl.Int8),
+        "BIT": (np.uint8, "UInt8", pl.UInt8),
         # "BOOL": (np.bool_, "boolean"),
         # "BIT8": (np.bool_, "UInt8"),
         "INT8": (np.int8, "Int8", pl.Int8),
