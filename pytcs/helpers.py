@@ -7,25 +7,27 @@ import numpy as np
 import pandas as pd
 from bidict import bidict
 
+import polars as pl
+
 
 def get_tc3_dtypes():
-    """List of conversion from twincat to (numpy, pandas) dtypes."""
+    """List of conversion from twincat to (numpy, pandas, polars) dtypes."""
     import numpy as np
 
     tc3_dtypes = {
-        "BIT": (np.bool_, "boolean"),
+        "BIT": (np.bool_, "boolean", pl.Int8),
         # "BOOL": (np.bool_, "boolean"),
         # "BIT8": (np.bool_, "UInt8"),
-        "INT8": (np.int8, "Int8"),
-        "INT16": (np.int16, "Int16"),
-        "INT32": (np.int32, "Int32"),
-        "INT64": (np.int64, "Int64"),
-        "UINT8": (np.uint8, "UInt8"),
-        "UINT16": (np.uint16, "UInt16"),
-        "UINT32": (np.uint32, "UInt32"),
-        "UINT64": (np.uint64, "UInt64"),
-        "REAL32": (np.float32, np.float32),
-        "REAL64": (np.float64, np.float64),
+        "INT8": (np.int8, "Int8", pl.Int8),
+        "INT16": (np.int16, "Int16", pl.Int16),
+        "INT32": (np.int32, "Int32", pl.Int32),
+        "INT64": (np.int64, "Int64", pl.Int64),
+        "UINT8": (np.uint8, "UInt8", pl.UInt8),
+        "UINT16": (np.uint16, "UInt16", pl.UInt16),
+        "UINT32": (np.uint32, "UInt32", pl.UInt32),
+        "UINT64": (np.uint64, "UInt64", pl.UInt64),
+        "REAL32": (np.float32, np.float32, pl.Float32),
+        "REAL64": (np.float64, np.float64, pl.Float64),
         # "BIT_ARRAY_8": (, ),
         # "STRING_255": (, ),
         # "IMAGE": (, ),

@@ -638,6 +638,16 @@ class ScopeFile:
         # polars uses different econding names
         _encoding = "utf8" if self._encoding == "utf-8" else self._encoding
 
+        tc3_dtypes = get_tc3_dtypes()
+
+        data_dtypes = {self[c].value_col: self[c].info["Data-Type"] for c in self}
+        data_dtypes = {k: tc3_dtypes[v][2] for k, v in data_dtypes.items()}
+        time_dtypes = {self[c].time_col: pl.Float64 for c in self}
+        schema = data_dtypes | time_dtypes
+
+        schema = {str(k): v for k, v in schema.items() if k in usecols}
+        schema = dict(sorted(schema.items()))
+
         if isinstance(self._file, IOBase):  # read open streams from beginning
             self._file.seek(0)
 
@@ -654,28 +664,21 @@ class ScopeFile:
             encoding=_encoding,  # equivalent to pandas 'encoding'
             null_values=[" ", "EOF"],  # equivalent to pandas 'na_values'
             ignore_errors=False,
+            infer_schema=False,
+            schema_overrides=schema,
         )
 
         if native_dtypes:
-            tc3_dtypes = get_tc3_dtypes()
-            dtypes_np = {
-                v.value_col: tc3_dtypes[v.info.get("Data-Type", "REAL64")][0]
-                for v in self._channels.values()
-            }
-            dtypes_times = dict.fromkeys(self._get_time_cols(), np.float64)
-            dtypes_np.update(dtypes_times)
             data_dict = {
-                int(k): df.get_column(k)
-                .drop_nulls()
-                .to_numpy()
-                .astype(dtypes_np[int(k)])
-                for k in df.columns
+                int(k): df.get_column(k).drop_nulls().to_numpy() for k in df.columns
             }
         else:
             data_dict = {
                 int(k): df.get_column(k).drop_nulls().to_numpy().astype(np.float64)
                 for k in df.columns
             }
+
+        # del df
 
         return data_dict
 
