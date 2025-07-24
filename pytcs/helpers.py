@@ -1,6 +1,6 @@
 """General helper and utility functions."""
 
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from typing import Union
 
 import numpy as np
@@ -72,7 +72,7 @@ def filetime_to_dt(ft: int) -> datetime:
     >>> filetime_to_dt(128930364000001000)
     datetime.datetime(2009, 7, 25, 23, 0, 0, 100, tzinfo=datetime.timezone.utc)
     """
-    return datetime.fromtimestamp((ft - MS_FILETIME_OFFSET) / 1e7, tz=UTC)
+    return datetime.fromtimestamp((ft - MS_FILETIME_OFFSET) / 1e7, tz=timezone.utc)
 
 
 def parse_unit_string(tc3_unit_string: str) -> str:
@@ -117,7 +117,7 @@ def to_datetime_from_ms(t: np.ndarray, origin: pd.Timestamp) -> pd.DatetimeIndex
          time naive DatetimeIndex (in UTC reference)
     """
     t_int = (t * 1e6).astype(np.int64)
-    origin_ts = pd.Timestamp(origin).replace(tzinfo=UTC).tz_convert(None)
+    origin_ts = pd.Timestamp(origin).replace(tzinfo=timezone.utc).tz_convert(None)
     return pd.to_datetime(t_int + origin_ts.value)
 
 

@@ -18,7 +18,7 @@ license-files = [ "LICENSE" ]
 authors = [
   { name = "Çağtay Fabry", email = "cagtay.fabry@bam.de" },
 ]
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 classifiers = [
   "Development Status :: 4 - Beta",
   "Intended Audience :: Science/Research",
@@ -26,6 +26,7 @@ classifiers = [
   "Operating System :: OS Independent",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
@@ -84,7 +85,6 @@ find = {} # Scanning implicit namespaces is active by default
 # enable setuptools-scm versioning
 
 [tool.ruff]
-target-version = "py311" # designated Python version
 line-length = 88
 extend-exclude = [
   "./resources/**",
