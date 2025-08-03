@@ -5,10 +5,13 @@
 ### changed
 
 - add `polars` backend to `ScopeFile.load` #60
+- set `polars` as default backend in `ScopeFile.load` #63
 - remove `datatable` backend from `ScopeFile.load` #62
+- assign `BIT` to `uint8` #63
 
 ### dependencies
 
+- add `poalrs>=1.21` #63
 - pin `python>=3.11`, `numpy>=2`, `pandas>=2` #62
 - remove `pint` dependency #62
 
