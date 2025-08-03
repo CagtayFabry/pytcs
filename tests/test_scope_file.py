@@ -86,7 +86,7 @@ class TestScopeFile:
             for c in sf:
                 if c.startswith("var_"):
                     _np_type = tc3[c[4:]][0]
-                    assert sf[c]._values.dtype == _np_type
+                    assert sf[c]._values.dtype == (_np_type if not sf[c].is_scaled else np.float32)
 
     @staticmethod
     @pytest.mark.parametrize("native_dtypes", [False, True])

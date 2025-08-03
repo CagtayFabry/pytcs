@@ -137,6 +137,17 @@ class ScopeChannel:
             s += f"\nunits:         {self.units}"
         return s
 
+    @property
+    def is_scaled(self) -> bool:
+        """Return true if any scaling (value or unit) is applied to the channel."""
+
+        return (
+            self.info.get("Offset", 0) != 0
+            or self.info.get("ScaleFactor", 0) != 0
+            or self.info.get("Unit Offset", 0) != 0
+            or self.info.get("Unit ScaleFactor", 0) != 0
+        )
+
 
 # https://github.com/florimondmanca/www/issues/102#issuecomment-733947821
 ScopeChannel.values = property(ScopeChannel.get_values, ScopeChannel.set_values)
@@ -640,7 +651,12 @@ class ScopeFile:
 
         tc3_dtypes = get_tc3_dtypes()
 
-        data_dtypes = {self[c].value_col: self[c].info["Data-Type"] for c in self}
+        data_dtypes = {
+            self[c].value_col: (
+                self[c].info["Data-Type"] if not self[c].is_scaled else "REAL32"
+            )
+            for c in self
+        }
         data_dtypes = {k: tc3_dtypes[v][2] for k, v in data_dtypes.items()}
         time_dtypes = {self[c].time_col: pl.Float64 for c in self}
         schema = data_dtypes | time_dtypes
