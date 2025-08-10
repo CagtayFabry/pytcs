@@ -635,7 +635,11 @@ class ScopeFile:
                 for v in self._channels.values()
             }
             dtypes_times = dict.fromkeys(self._get_time_cols(), np.float64)
+            dtypes_scaled = {
+                self[c].value_col: np.float64 for c in self if self[c].is_scaled
+            }
             dtypes_np.update(dtypes_times)
+            dtypes_np.update(dtypes_scaled)
             data_dict = {k: df[k].dropna().to_numpy(dtypes_np[k]) for k in df}
         else:
             data_dict = {k: df[k].dropna().to_numpy(np.float64) for k in df}
@@ -653,7 +657,7 @@ class ScopeFile:
 
         data_dtypes = {
             self[c].value_col: (
-                self[c].info["Data-Type"] if not self[c].is_scaled else "REAL32"
+                self[c].info["Data-Type"] if not self[c].is_scaled else "REAL64"
             )
             for c in self
         }

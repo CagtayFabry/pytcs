@@ -8,6 +8,7 @@
 - set `polars` as default backend in `ScopeFile.load` #63
 - remove `datatable` backend from `ScopeFile.load` #62
 - assign `BIT` to `uint8` #63
+- always read scaled channels as float #63
 
 ### dependencies
 
