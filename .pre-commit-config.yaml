@@ -27,7 +27,7 @@ repos:
     - mdformat-config
   # ----- Python formatting -----
 - repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.12.4
+  rev: v0.12.7
   hooks:
       # Run ruff linter.
   - id: ruff-check
