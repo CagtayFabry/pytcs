@@ -1,4 +1,5 @@
 """Test basic io functions."""
+
 from pathlib import Path
 from io import BytesIO, StringIO
 import tempfile
@@ -53,7 +54,9 @@ class TestScopeFile:
     @pytest.mark.parametrize("time_mapping_style", ["full", "reduced"])
     @pytest.mark.parametrize("backend", ["pandas", "polars"])
     @pytest.mark.parametrize("use_buffer", [False, True])
-    def test_scope_file(filenames, time_mapping_style, backend, native_dtypes, use_buffer):
+    def test_scope_file(
+        filenames, time_mapping_style, backend, native_dtypes, use_buffer
+    ):
         file = filenames
 
         if any(sep in str(file) for sep in broken_load):
@@ -72,7 +75,7 @@ class TestScopeFile:
         assert len(np.unique(sf._get_time_cols())) + len(sf._get_data_cols()) == len(
             sf._data
         )
-        assert all([type(v) == np.ndarray for v in sf._data.values()])
+        assert all([isinstance(v, np.ndarray) for v in sf._data.values()])
 
         # monotonic time
         for c in sf:
@@ -83,8 +86,7 @@ class TestScopeFile:
             for c in sf:
                 if c.startswith("var_"):
                     _np_type = tc3[c[4:]][0]
-                    assert sf[c]._values.dtype == _np_type
-
+                    assert sf[c]._values.dtype == (_np_type if not sf[c].is_scaled else np.float64)
 
     @staticmethod
     @pytest.mark.parametrize("native_dtypes", [False, True])
@@ -105,7 +107,7 @@ class TestScopeFile:
         assert len(np.unique(sf._get_time_cols())) + len(sf._get_data_cols()) == len(
             sf._data
         )
-        assert all([type(v) == np.ndarray for v in sf._data.values()])
+        assert all([isinstance(v, np.ndarray) for v in sf._data.values()])
 
         # monotonic time
         for c in sf:

@@ -137,6 +137,17 @@ class ScopeChannel:
             s += f"\nunits:         {self.units}"
         return s
 
+    @property
+    def is_scaled(self) -> bool:
+        """Return true if any scaling (value or unit) is applied to the channel."""
+
+        return (
+            self.info.get("Offset", 0) != 0
+            or self.info.get("ScaleFactor", 0) != 0
+            or self.info.get("Unit Offset", 0) != 0
+            or self.info.get("Unit ScaleFactor", 0) != 0
+        )
+
 
 # https://github.com/florimondmanca/www/issues/102#issuecomment-733947821
 ScopeChannel.values = property(ScopeChannel.get_values, ScopeChannel.set_values)
@@ -210,7 +221,7 @@ class ScopeFile:
         with fopen(self._file, "rt", encoding=self._encoding) as f:
             self._read_header(f)
 
-    def load(self, channels: list[str] = None, native_dtypes=False, backend="pandas"):
+    def load(self, channels: list[str] = None, native_dtypes=False, backend="polars"):
         """Load one or more channels into memory.
 
         Parameters
@@ -224,7 +235,7 @@ class ScopeFile:
             Default: ``False``
         backend
             The CSV backend to use.
-            Available backends are ``pandas`` (default) and ``polars``.
+            Available backends are ``polars`` (default) and ``pandas``.
             Reading with pandas uses the ``engine=c``.
 
         """
@@ -624,7 +635,11 @@ class ScopeFile:
                 for v in self._channels.values()
             }
             dtypes_times = dict.fromkeys(self._get_time_cols(), np.float64)
+            dtypes_scaled = {
+                self[c].value_col: np.float64 for c in self if self[c].is_scaled
+            }
             dtypes_np.update(dtypes_times)
+            dtypes_np.update(dtypes_scaled)
             data_dict = {k: df[k].dropna().to_numpy(dtypes_np[k]) for k in df}
         else:
             data_dict = {k: df[k].dropna().to_numpy(np.float64) for k in df}
@@ -637,6 +652,21 @@ class ScopeFile:
 
         # polars uses different econding names
         _encoding = "utf8" if self._encoding == "utf-8" else self._encoding
+
+        tc3_dtypes = get_tc3_dtypes()
+
+        data_dtypes = {
+            self[c].value_col: (
+                self[c].info["Data-Type"] if not self[c].is_scaled else "REAL64"
+            )
+            for c in self
+        }
+        data_dtypes = {k: tc3_dtypes[v][2] for k, v in data_dtypes.items()}
+        time_dtypes = {self[c].time_col: pl.Float64 for c in self}
+        schema = data_dtypes | time_dtypes
+
+        schema = {str(k): v for k, v in schema.items() if k in usecols}
+        schema = dict(sorted(schema.items()))
 
         if isinstance(self._file, IOBase):  # read open streams from beginning
             self._file.seek(0)
@@ -654,28 +684,21 @@ class ScopeFile:
             encoding=_encoding,  # equivalent to pandas 'encoding'
             null_values=[" ", "EOF"],  # equivalent to pandas 'na_values'
             ignore_errors=False,
+            infer_schema=False,
+            schema_overrides=schema,
         )
 
         if native_dtypes:
-            tc3_dtypes = get_tc3_dtypes()
-            dtypes_np = {
-                v.value_col: tc3_dtypes[v.info.get("Data-Type", "REAL64")][0]
-                for v in self._channels.values()
-            }
-            dtypes_times = dict.fromkeys(self._get_time_cols(), np.float64)
-            dtypes_np.update(dtypes_times)
             data_dict = {
-                int(k): df.get_column(k)
-                .drop_nulls()
-                .to_numpy()
-                .astype(dtypes_np[int(k)])
-                for k in df.columns
+                int(k): df.get_column(k).drop_nulls().to_numpy() for k in df.columns
             }
         else:
             data_dict = {
                 int(k): df.get_column(k).drop_nulls().to_numpy().astype(np.float64)
                 for k in df.columns
             }
+
+        # del df
 
         return data_dict
 
