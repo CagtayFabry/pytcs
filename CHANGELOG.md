@@ -1,12 +1,13 @@
 # pytcs
 
-## v0.2.0 (unreleased)
+## v0.2.0 (25.08.2025)
 
 ### changed
 
 - add `polars` backend to `ScopeFile.load` #60
 - set `polars` as default backend in `ScopeFile.load` #63
 - remove `datatable` backend from `ScopeFile.load` #62
+- remove `pyarrow` backend from `ScopeFile.load` #65
 - assign `BIT` to `uint8` #63
 - always read scaled channels as float #63
 
@@ -15,6 +16,7 @@
 - add `poalrs>=1.21` #63
 - pin `python>=3.11`, `numpy>=2`, `pandas>=2` #62
 - remove `pint` dependency #62
+- add deprecation warning when using `pandas` backend #65
 
 ### general
 

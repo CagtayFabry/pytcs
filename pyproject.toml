@@ -14,7 +14,9 @@ keywords = [
   "TwinCAT",
   "TwinCAT Scope",
 ]
-license-files = [ "LICENSE" ]
+license-files = [
+  "LICENSE",
+]
 authors = [
   { name = "Çağtay Fabry", email = "cagtay.fabry@bam.de" },
 ]
@@ -43,7 +45,6 @@ dependencies = [
 optional-dependencies.all = [
   "bottleneck>=1.3",
   "netcdf4",
-  "polars",
   "xarray>=0.15",
 ]
 optional-dependencies.export = [
@@ -54,8 +55,6 @@ optional-dependencies.export = [
 optional-dependencies.test = [
   # needed to run the test suite
   "netcdf4",
-  "polars",
-  "pyarrow",
   "pytest",
   "pytest-cov",
   "pytest-xdist",
@@ -67,16 +66,15 @@ urls.repository = "https://github.com/CagtayFabry/pytcs"
 [dependency-groups]
 test = [
   "netcdf4",
-  "polars",
-  "pyarrow",
   "pytest",
   "pytest-cov",
   "pytest-xdist",
   "xarray",
 ]
-polars = [ "polars" ]
-pyarrow = [ "pyarrow" ]
-xarray = [ "netcdf4", "xarray" ]
+xarray = [
+  "netcdf4",
+  "xarray",
+]
 
 [tool.setuptools.packages]
 find = {} # Scanning implicit namespaces is active by default

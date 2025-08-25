@@ -86,11 +86,11 @@ sf["func_units_scaled"]
 
 ### CSV backends
 
-The default implementation of `pytcs` uses `pandas.read_csv` for parsing CSV files.
-The `pandas` backend aims to provide the most flexible support for the various formatting options provided by the TwinCAT Scope export tool.
+The default implementation of `pytcs` uses `polars.read_csv` for parsing CSV files.
+The `polars` backend is the new default since `v0.2.0` and aims to provide support for the various formatting options provided by the TwinCAT Scope export tool with good file reading performance.
 
-To improve performance for large files, [polars](https://pola.rs/) can be set as an alternative CSV backend.
-Polars can be selected by using `ScopeFile.load(..., backend="polars")`.
+In case of compatibility issues, the old default `pandas` backend can be used calling `ScopeFile.load(..., backend="pandas")`.
+The `pandas` backend will be deprecated in a future release.
 
 ### exporting to pandas and xarray
 

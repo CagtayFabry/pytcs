@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import gzip
-import importlib
 from collections.abc import ItemsView, Iterator, KeysView, ValuesView
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -15,7 +14,9 @@ from warnings import warn
 
 import numpy as np
 import pandas as pd
+import polars as pl
 
+from pytcs.exceptions import PytcsDeprecationWarning
 from pytcs.helpers import (
     filetime_to_dt,
     get_tc3_dtypes,
@@ -246,8 +247,6 @@ class ScopeFile:
 
         if backend == "pandas":
             data_dict = self._read_pandas(usecols, native_dtypes)
-        elif backend == "pyarrow":
-            data_dict = self._read_pyarrow(usecols, native_dtypes)
         elif backend == "polars":
             data_dict = self._read_polars(usecols, native_dtypes)
         else:
@@ -604,6 +603,10 @@ class ScopeFile:
         self, usecols: list[int], native_dtypes: bool
     ) -> dict[str, np.ndarray]:
         """Read data into dictionary using the pandas backend."""
+
+        _msg = "The 'pandas' backend is deprecated and will be removed in the future."
+        PytcsDeprecationWarning(_msg)
+
         if isinstance(self._file, IOBase):  # read open streams from beginning
             self._file.seek(0)
 
@@ -648,8 +651,6 @@ class ScopeFile:
 
     def _read_polars(self, usecols: list[int], native_dtypes: bool):
         """Read data into dictionary using the polars backend."""
-        import polars as pl
-
         # polars uses different econding names
         _encoding = "utf8" if self._encoding == "utf-8" else self._encoding
 
@@ -699,79 +700,6 @@ class ScopeFile:
             }
 
         # del df
-
-        return data_dict
-
-    def _read_pyarrow(
-        self, usecols: list[int], native_dtypes: bool
-    ) -> dict[str, np.ndarray]:
-        """Read data into dictionary using the pyarrow backend of pandas."""
-        from itertools import groupby
-
-        if not importlib.util.find_spec("pyarrow"):
-            warn(
-                "'pyarrow' backend not found, using default pandas implementation.",
-                UserWarning,
-                stacklevel=2,
-            )
-            return self._read_pandas(usecols, native_dtypes)
-
-        def all_equal(iterable):
-            "Returns True if all the elements are equal to each other"
-            g = groupby(iterable)
-            return next(g, True) and not next(g, False)
-
-        if usecols:
-            warn(
-                """Channel selection is not supported with 'pyarrow' backend, """
-                """loading all channels.""",
-                UserWarning,
-                stacklevel=2,
-            )
-            usecols = None
-
-        if not all_equal(self[c].sample_time for c in self):
-            raise ValueError(
-                "Unsupported file format for 'pyarrow' backend. (unequal sample times)"
-            )
-
-        if isinstance(self._file, IOBase):  # read open streams from beginning
-            self._file.seek(0)
-
-        compression = self._compression
-        if isinstance(self._file, BytesIO):  # assume gzip
-            compression = "gzip"
-
-        df = pd.read_csv(
-            self._file,
-            delimiter=self._delimiter,
-            skiprows=self._header_lines,
-            # decimal=self._decimal, # unsupported with pyarrow
-            header=None,
-            usecols=usecols,
-            names=self._get_cols(),
-            # index_col=False,
-            encoding=self._encoding,
-            na_values=[" ", "EOF"],
-            skip_blank_lines=True,
-            engine="pyarrow",
-            # low_memory=False, # unsupported with pyarrow
-            compression=compression,
-        )
-
-        self._df = df
-
-        if native_dtypes:
-            tc3_dtypes = get_tc3_dtypes()
-            dtypes_np = {
-                v.value_col: tc3_dtypes[v.info.get("Data-Type", "REAL64")][0]
-                for v in self._channels.values()
-            }
-            dtypes_times = dict.fromkeys(self._get_time_cols(), np.float64)
-            dtypes_np.update(dtypes_times)
-            data_dict = {k: df[k].dropna().to_numpy(dtypes_np[k]) for k in df}
-        else:
-            data_dict = {k: df[k].dropna().to_numpy(np.float64) for k in df}
 
         return data_dict
 
