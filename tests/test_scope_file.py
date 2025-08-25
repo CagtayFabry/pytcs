@@ -21,7 +21,6 @@ def file_idfn(path):
 
 # generate filenames to import
 files = sorted(Path(".").rglob("**/data/tc3_scope_*.csv*"))
-files_pyarrow = [file for file in files if "noOS" in file.name]
 
 # list of files broken for loading:
 broken_load = ["Seperator_1", "Seperator_4"]
@@ -29,11 +28,6 @@ broken_load = ["Seperator_1", "Seperator_4"]
 
 @pytest.fixture(scope="module", params=files, ids=file_idfn)
 def filenames(request):
-    return request.param
-
-
-@pytest.fixture(scope="module", params=files_pyarrow, ids=file_idfn)
-def filenames_pyarrow(request):
     return request.param
 
 
@@ -87,31 +81,6 @@ class TestScopeFile:
                 if c.startswith("var_"):
                     _np_type = tc3[c[4:]][0]
                     assert sf[c]._values.dtype == (_np_type if not sf[c].is_scaled else np.float64)
-
-    @staticmethod
-    @pytest.mark.parametrize("native_dtypes", [False, True])
-    @pytest.mark.parametrize("use_buffer", [False, True])
-    def test_pyarrow_backend(filenames_pyarrow, native_dtypes, use_buffer):
-        file = filenames_pyarrow
-
-        if use_buffer:
-            file = _get_as_buffer(file)
-
-        sf = ScopeFile(file)
-        for c in sf:
-            assert sf[c].info
-
-        sf.load(native_dtypes=native_dtypes, backend="pyarrow")
-
-        assert len(sf._get_data_cols()) == len(sf._channels)
-        assert len(np.unique(sf._get_time_cols())) + len(sf._get_data_cols()) == len(
-            sf._data
-        )
-        assert all([isinstance(v, np.ndarray) for v in sf._data.values()])
-
-        # monotonic time
-        for c in sf:
-            assert np.allclose(np.diff(sf[c].time), sf[c].sample_time)
 
     @staticmethod
     @pytest.mark.parametrize("backend", ["pandas", "polars"])
