@@ -3,9 +3,9 @@ name: build and publish to PyPI
 on:
   push:
     branches:
-      - main
+    - main
     tags:
-      - 'v*'
+    - v*
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
