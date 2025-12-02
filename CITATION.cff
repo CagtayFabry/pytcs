@@ -16,7 +16,7 @@ message: "If you use this software in your work, please cite it using the follow
 repository-code: "https://github.com/CagtayFabry/pytcs"
 # doi: ""
 keywords:
-  - TwinCAT 
+  - TwinCAT
   - "TwinCAT Scope"
   - "research data"
   - "file reader"

@@ -59,11 +59,11 @@ repos:
 - repo: https://github.com/rbubley/mirrors-prettier
   rev: v3.7.3
   hooks:
-    - id: prettier
-      files: CITATION.cff
+  - id: prettier
+    files: CITATION.cff
 - repo: https://github.com/citation-file-format/cffconvert
   rev: b6045d78aac9e02b039703b030588d54d53262ac
   hooks:
-    - id: validate-cff
-      args:
-        - --verbose
+  - id: validate-cff
+    args:
+    - --verbose
