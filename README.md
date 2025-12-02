@@ -1,7 +1,7 @@
-# pytcs
+# pytcs: a TwinCAT Scope text export file reader
 
 A Python package for reading exported TwinCAT Scope Files.\
-Export your TwinCAT Scope files `.svdx` to `.csv` and read them into Python.
+Export your TwinCAT Scope `.svdx` files to `.txt/.csv` and read them into Python.
 
 ## quickstart
 

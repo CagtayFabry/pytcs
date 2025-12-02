@@ -1,5 +1,9 @@
 # pytcs
 
+## v0.2.1 (02.12.2025)
+
+Release `0.2.1` is a maintenance release to prepare archiving on zenodo.
+
 ## v0.2.0 (25.08.2025)
 
 ### changed

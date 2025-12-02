@@ -51,3 +51,19 @@ repos:
   rev: v0.24.1
   hooks:
   - id: validate-pyproject
+ # ----- CFF checking -----
+  # Format and validate CFF. NOTE: pre-commit doesn't recognize CFF as YAML
+  # (https://github.com/pre-commit/identify/pull/435), so we may need to
+  # specify the prettier hook twice if we want to format other things and avoid
+  # a messy regex.
+- repo: https://github.com/rbubley/mirrors-prettier
+  rev: v3.7.3
+  hooks:
+  - id: prettier
+    files: CITATION.cff
+- repo: https://github.com/citation-file-format/cffconvert
+  rev: b6045d78aac9e02b039703b030588d54d53262ac
+  hooks:
+  - id: validate-cff
+    args:
+    - --verbose

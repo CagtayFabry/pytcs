@@ -1,0 +1,25 @@
+# YAML 1.2
+---
+cff-version: 1.2.0
+title: "pytcs: a TwinCAT Scope text export file reader"
+type: software
+version: v0.2.1
+date-released: 2025-12-02
+license: BSD-3-Clause
+authors:
+  - affiliation: "Bundesanstalt für Materialforschung und -prüfung (BAM)"
+    email: cagtay.fabry@bam.de
+    family-names: Fabry
+    given-names: Çağtay
+    orcid: "https://orcid.org/0000-0002-0788-8079"
+message: "If you use this software in your work, please cite it using the following metadata."
+repository-code: "https://github.com/CagtayFabry/pytcs"
+# doi: ""
+keywords:
+  - TwinCAT
+  - "TwinCAT Scope"
+  - "research data"
+  - "file reader"
+abstract: |
+  A Python package for reading exported TwinCAT Scope Files.
+  Export your TwinCAT Scope .svdx files to .txt/.csv and read them into Python.
