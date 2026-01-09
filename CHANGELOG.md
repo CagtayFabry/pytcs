@@ -1,5 +1,13 @@
 # pytcs
 
+## v0.2.2 (09.01.2026)
+
+Release `0.2.2` is a maintenance release due to pip install/build errors with netcdf4 1.7.4.
+
+### dependencies
+
+- pin `netcdf4<1.7.4`
+
 ## v0.2.1 (02.12.2025)
 
 Release `0.2.1` is a maintenance release to prepare archiving on zenodo.
