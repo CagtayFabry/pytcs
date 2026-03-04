@@ -3,7 +3,7 @@ ci:
     [pre-commit.ci] auto fixes from pre-commit.com hooks
 
     for more information, see https://pre-commit.ci
-  autofix_prs: false
+  autofix_prs: true
   autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
   autoupdate_schedule: monthly
   skip: []
@@ -27,7 +27,7 @@ repos:
     - mdformat-config
   # ----- Python formatting -----
 - repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.14.10
+  rev: v0.15.4
   hooks:
       # Run ruff linter.
   - id: ruff-check
@@ -38,17 +38,17 @@ repos:
   - id: ruff-format
   # ----- repo maintenance -----
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-  rev: v2.15.0
+  rev: v2.16.0
   hooks:
   - id: pretty-format-yaml
     args: [--autofix, --indent, '2']
     exclude: devtools/conda.recipe/meta.yaml      # doesn't play nice with jinja
 - repo: https://github.com/tox-dev/pyproject-fmt
-  rev: v2.11.1
+  rev: v2.16.2
   hooks:
   - id: pyproject-fmt
 - repo: https://github.com/abravalheri/validate-pyproject
-  rev: v0.24.1
+  rev: v0.25
   hooks:
   - id: validate-pyproject
  # ----- CFF checking -----
@@ -57,7 +57,7 @@ repos:
   # specify the prettier hook twice if we want to format other things and avoid
   # a messy regex.
 - repo: https://github.com/rbubley/mirrors-prettier
-  rev: v3.7.4
+  rev: v3.8.1
   hooks:
   - id: prettier
     files: CITATION.cff

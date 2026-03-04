@@ -77,11 +77,9 @@ xarray = [
   "xarray",
 ]
 
-[tool.setuptools.packages]
-find = {} # Scanning implicit namespaces is active by default
-#exclude = ["tests", "resources"]
+[tool.setuptools]
+packages.find = {}  # Scanning implicit namespaces is active by default
 
-[tool.setuptools_scm]
 # enable setuptools-scm versioning
 
 [tool.ruff]
@@ -91,15 +89,15 @@ extend-exclude = [
   "./tests/**",
 ]
 lint.extend-select = [
-  "B", # flake8-bugbear
-  "C", # flake8-comprehensions
-  #"D", # note: all relevant D's will be set by setting pydocstyle.convention=numpy!
-  "E",    # pycodestyles
-  "F",    # pyflakes
-  "I",    # isort
-  "I001", # isort
-  "ICN",  # import conventions, e.g. import numpy as np
-  #"B950",  # not yet implemented by Ruff.
+  "B",      # flake8-bugbear
+  "C",      # flake8-comprehensions
+  # "D", # note: all relevant D's will be set by setting pydocstyle.convention=numpy!
+  "E",      # pycodestyles
+  "F",      # pyflakes
+  "I",      # isort
+  "I001",   # isort
+  "ICN",    # import conventions, e.g. import numpy as np
+  # "B950",  # not yet implemented by Ruff.
   "RUF100", # ensure 'noqa' declarations are still valid.
   "T2",     # flake8-print
   "UP",     # pyupgrade
@@ -110,36 +108,32 @@ lint.ignore = [
   "UP007", # see ruff GH#4427
 ]
 lint.flake8-import-conventions.extend-aliases = { xarray = "xr" }
-
 lint.isort.known-first-party = [
   "pytcs",
 ]
-lint.mccabe = { max-complexity = 15 } # max branches inside a function.
-
+lint.mccabe = { max-complexity = 15 }  # max branches inside a function.
 lint.pydocstyle = { convention = "numpy" }
 
-[tool.pytest.ini_options]
-addopts = "--tb=short --color=yes -rsw --cov=pytcs --cov-report=term-missing:skip-covered --doctest-modules"
-testpaths = [
+[tool.pytest]
+ini_options.addopts = "--tb=short --color=yes -rsw --cov=pytcs --cov-report=term-missing:skip-covered --doctest-modules"
+ini_options.testpaths = [
   "tests",
 ]
+
+[tool.coverage]
 # norecursedirs = "doc"
 
-[tool.coverage.run]
-source = [
+run.source = [
   "pytcs",
 ]
-
-[tool.coverage.report]
-omit = [
-  "tests/*",
-]
-exclude_lines = [
-  # Have to re-enable the standard pragma
-  "pragma: no cover",
-
+report.exclude_lines = [
   # ignore class __repr__-like functions:
   "def __repr__",
   "def __str__",
   "def _ipython_display_",
+  # Have to re-enable the standard pragma
+  "pragma: no cover",
+]
+report.omit = [
+  "tests/*",
 ]
