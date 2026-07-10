@@ -114,13 +114,12 @@ lint.mccabe = { max-complexity = 15 }  # max branches inside a function.
 lint.pydocstyle = { convention = "numpy" }
 
 [tool.pytest]
-ini_options.addopts = "--tb=short --color=yes -rsw --cov=pytcs --cov-report=term-missing:skip-covered --doctest-modules"
 ini_options.testpaths = [
   "tests",
 ]
+ini_options.addopts = "--tb=short --color=yes -rsw --cov=pytcs --cov-report=term-missing:skip-covered --doctest-modules"
 
 [tool.coverage]
-# norecursedirs = "doc"
 run.source = [
   "pytcs",
 ]
@@ -135,3 +134,4 @@ report.exclude_lines = [
 report.omit = [
   "tests/*",
 ]
+# norecursedirs = "doc"
