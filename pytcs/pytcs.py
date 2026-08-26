@@ -79,7 +79,7 @@ class ScopeChannel:
         """Channel as xarray dataarray."""
         import xarray as xr
 
-        if not (lt := len(self.time)) == (lv := len(self.values)):
+        if (lt := len(self.time)) != (lv := len(self.values)):
             warn(
                 f"Mismatch in time and value length for channel {self.name}",
                 UserWarning,
@@ -160,8 +160,8 @@ class ScopeFile:
     def __init__(
         self,
         filepath_or_buffer: Path | str | StringIO | BytesIO,
-        delimiter: str = None,
-        decimal: str = None,
+        delimiter: str | None = None,
+        decimal: str | None = None,
         encoding: str = "utf-8",
         compression: str = "infer",
         time_mapping_style: str = "full",
@@ -222,7 +222,12 @@ class ScopeFile:
         with fopen(self._file, "rt", encoding=self._encoding) as f:
             self._read_header(f)
 
-    def load(self, channels: list[str] = None, native_dtypes=False, backend="polars"):
+    def load(
+        self,
+        channels: list[str] | None = None,
+        native_dtypes=False,
+        backend="polars",
+    ):
         """Load one or more channels into memory.
 
         Parameters
@@ -270,7 +275,7 @@ class ScopeFile:
 
     def as_pandas(
         self,
-        channels: list[str] = None,
+        channels: list[str] | None = None,
         time_fmt: str = "timestamp",
     ) -> pd.DataFrame:
         """Convert scope file into `pandas.DataFrame`.
@@ -331,7 +336,7 @@ class ScopeFile:
 
     def as_xarray(
         self,
-        channels: list[str] = None,
+        channels: list[str] | None = None,
         time_fmt: str = "timestamp",
     ) -> xr.Dataset:
         """Convert scope file into `xarray.Dataset`.
@@ -709,7 +714,7 @@ class ScopeFile:
             if (k not in self._data) & (v in self._data):
                 self._data[k] = self._data[v]
 
-    def _get_usecols(self, channels: list[str] = None) -> list[int]:
+    def _get_usecols(self, channels: list[str] | None = None) -> list[int]:
         """Get the column numbers to read from a list of column names.
 
         The column numbers include the corresponding time and data columns.
@@ -752,7 +757,7 @@ class ScopeFile:
 
         values = list(chain(*values))  # flatten
 
-        if not len(self._channels.keys()) == len(values):
+        if len(self._channels.keys()) != len(values):
             if key == "SymbolComment":
                 warn(
                     "Wrong format in 'SymbolComment' header line, skipping.",
@@ -782,7 +787,7 @@ class ScopeFile:
             return decimal
         raise ValueError(f"unexpected {decimal=}")
 
-    def _get_channels(self, channels: list[str] = None) -> dict:
+    def _get_channels(self, channels: list[str] | None = None) -> dict:
         if isinstance(channels, str):
             channels = [channels]
 
@@ -790,19 +795,19 @@ class ScopeFile:
             return {k: v for k, v in self._channels.items() if k in channels}
         return self._channels
 
-    def _get_time_cols(self, channels: KeysView | list[str] = None) -> list[int]:
+    def _get_time_cols(self, channels: KeysView | list[str] | None = None) -> list[int]:
         """Get all associated time columns from a list of channel names."""
         if channels is None:
             channels = self._channels.keys()
         return [v.time_col for v in self._channels.values() if v.name in channels]
 
-    def _get_data_cols(self, channels: KeysView | list[str] = None) -> list[int]:
+    def _get_data_cols(self, channels: KeysView | list[str] | None = None) -> list[int]:
         """Get all associated data columns from a list of channel names."""
         if channels is None:
             channels = self._channels.keys()
         return [v.value_col for v in self._channels.values() if v.name in channels]
 
-    def _get_cols(self, channels: list[str] = None) -> list[int]:
+    def _get_cols(self, channels: list[str] | None = None) -> list[int]:
         """Get a set of all columns in the data needed for selected channels.
 
         This contains the columns for time and data.

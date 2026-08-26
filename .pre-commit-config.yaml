@@ -43,10 +43,10 @@ repos:
   - id: pretty-format-yaml
     args: [--autofix, --indent, '2']
     exclude: devtools/conda.recipe/meta.yaml      # doesn't play nice with jinja
-- repo: https://github.com/tox-dev/pyproject-fmt
-  rev: v2.26.0
-  hooks:
-  - id: pyproject-fmt
+# - repo: https://github.com/tox-dev/pyproject-fmt
+#   rev: v2.26.0
+#   hooks:
+#   - id: pyproject-fmt
 - repo: https://github.com/abravalheri/validate-pyproject
   rev: v0.25
   hooks:
